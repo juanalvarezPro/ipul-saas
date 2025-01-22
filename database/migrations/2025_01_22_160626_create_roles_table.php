@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaction_types', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('roles', function (Blueprint $table) {
+           $table->id();
+           $table->string("name")->nullable(false);
+           $table->timestamps();
         });
     }
 
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaction_types');
+        Schema::dropIfExists('roles');
     }
 };

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('transaction_concepts', function (Blueprint $table) {
             $table->id();
+            $table->string("name")->nullable(false);
+            $table->text("description")->nullable();
+            $table->boolean("active")->default(true);
             $table->timestamps();
         });
     }
