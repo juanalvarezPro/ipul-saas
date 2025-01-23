@@ -2,8 +2,10 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\RegisterTeam as PagesRegisterTeam;
+use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Models\Team;
+use App\Filament\Pages\Tenancy\EditTeamProfile;
+use App\Http\Middleware\ApplyTenantScopes;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,6 +30,9 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->tenant(Team::class)
+            ->tenantProfile(EditTeamProfile::class)
+            ->tenantRegistration(RegisterTeam::class)
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -52,12 +57,11 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                ApplyTenantScopes::class
             ])
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->tenant(Team::class)
-            ->tenantRegistration(PagesRegisterTeam::class)
             ->registration()
             ;
     }
