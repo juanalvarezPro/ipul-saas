@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\hasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Team extends Model
 {
     protected $guarded = [];
     
-    public function transactions()
+    public function transactions(): hasMany
     {
         return $this->hasMany(Transactions::class);
     }
@@ -24,7 +25,7 @@ class Team extends Model
         return $this->hasMany(TransactionType::class);
     }
 
-    public function members()
+    public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }
