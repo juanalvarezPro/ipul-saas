@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string("name")->nullable(false);
             $table->text("description")->nullable();
             $table->boolean("active")->default(true);
+            $table->unsignedBigInteger('team_id');
             $table->timestamps();
+
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
         });
     }
 
