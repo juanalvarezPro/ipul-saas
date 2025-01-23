@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\TransactionConcepts;
 use Closure;
 use Filament\Facades\Filament;
 use App\Models\TransactionType;
@@ -19,6 +20,10 @@ class ApplyTenantScopes
     public function handle(Request $request, Closure $next): Response
     {
         TransactionType::addGlobalScope(
+            fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())
+        );
+
+        TransactionConcepts::addGlobalScope(
             fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())
         );
         return $next($request);

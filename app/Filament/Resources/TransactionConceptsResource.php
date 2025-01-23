@@ -25,6 +25,10 @@ class TransactionConceptsResource extends Resource
         return $form
         ->schema([
             Forms\Components\TextInput::make('name'),
+            Forms\Components\Toggle::make('active')
+            ->label('Active')
+            ->default(true),
+            Forms\Components\TextInput::make('description'),
         ]);
     }
 
@@ -36,6 +40,12 @@ class TransactionConceptsResource extends Resource
                 ->label('name')
                 ->sortable()
                 ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                ->label('description')
+                ->sortable()
+                ->searchable(),
+                Tables\Columns\ToggleColumn::make('active')
+                
             ])
             ->filters([
                 //
