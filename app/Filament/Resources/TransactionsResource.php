@@ -31,9 +31,14 @@ class TransactionsResource extends Resource
                 Forms\Components\TextInput::make('description')
                     ->label('Description')
                     ->required(),
-                Forms\Components\TextInput::make('team_id')
-                    ->label('Team ID')
-                    ->numeric()
+                Forms\Components\Select::make('transaction_type_id')
+                  ->relationship('transactionType', 'name') 
+                  ->required(),
+                  Forms\Components\Select::make('concept_id')
+                  ->relationship('transactionConcept', 'name') 
+                  ->required(),
+                Forms\Components\DatePicker::make('transaction_date')
+                    ->label('Date')
                     ->required(),
             ]);
     }
