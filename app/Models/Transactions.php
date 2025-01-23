@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transactions extends Model
 {
-    protected $fillable = ['amount', 'description', 'team_id', 'concept_id'];
+    protected $fillable = ['amount', 'description', 'team_id', 'concept_id', 'transaction_type_id'];
 
     public function team(){
         return $this->belongsTo(Team::class);
