@@ -19,8 +19,7 @@ return new class extends Migration
             $table->date('transaction_date')->nullable(false);
             $table->text('description')->nullable();
             $table->unsignedBigInteger('team_id');
-            $table->string('certificate_file')->nullable();
-            $table->string('original_filename')->nullable();
+            $table->string('attachments')->nullable();
             $table->timestamps();
     
             // Relaciones

@@ -40,6 +40,7 @@ class TransactionsResource extends Resource
                 Forms\Components\DatePicker::make('transaction_date')
                     ->label('Date')
                     ->required(),
+                    Forms\Components\FileUpload::make('attachment')
             ]);
     }
 
