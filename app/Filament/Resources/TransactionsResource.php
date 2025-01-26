@@ -31,9 +31,6 @@ class TransactionsResource extends Resource
                 Forms\Components\TextInput::make('description')
                     ->label('Description')
                     ->required(),
-                Forms\Components\Select::make('transaction_type_id')
-                  ->relationship('transactionType', 'name') 
-                  ->required(),
                   Forms\Components\Select::make('concept_id')
                   ->relationship('transactionConcept', 'name') 
                   ->required(),
@@ -61,8 +58,8 @@ class TransactionsResource extends Resource
                 ->label('Description')
                 ->sortable()
                 ->searchable(),
-            Tables\Columns\TextColumn::make('team_id')
-                ->label('Team ID')
+            Tables\Columns\TextColumn::make('transactionConcept.transactionType.name')
+                ->label('Movimiento')
                 ->sortable()
                 ->searchable(),
         ])

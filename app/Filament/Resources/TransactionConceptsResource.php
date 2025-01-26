@@ -29,6 +29,9 @@ class TransactionConceptsResource extends Resource
             ->label('Active')
             ->default(true),
             Forms\Components\TextInput::make('description'),
+            Forms\Components\Select::make('transaction_type_id')
+            ->relationship('transactionType', 'name') 
+            ->required(),
         ]);
     }
 
@@ -42,6 +45,10 @@ class TransactionConceptsResource extends Resource
                 ->searchable(),
                 Tables\Columns\TextColumn::make('description')
                 ->label('description')
+                ->sortable()
+                ->searchable(),
+                Tables\Columns\TextColumn::make('transactionType.name')
+                ->label('Transaction Type Name')
                 ->sortable()
                 ->searchable(),
                 Tables\Columns\ToggleColumn::make('active')
