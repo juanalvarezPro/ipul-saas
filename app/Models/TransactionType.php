@@ -11,8 +11,8 @@ class TransactionType extends Model
     public function team(): BelongsTo{
         return $this->belongsTo(Team::class);
     }
-    public function transactions()
+    public function transactionsConcepts()
     {
-        return $this->hasMany(Transactions::class, 'transaction_type_id');  // 'transaction_type_id' es la clave foránea en 'transactions'
+        return $this->hasMany(TransactionConcepts::class, 'transaction_type_id');  // 'transaction_type_id' es la clave foránea en 'transactions'
     }
 }
