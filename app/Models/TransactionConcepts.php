@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TransactionConcepts extends Model
 {
-    protected $fillable  = ['name', 'description' ,'active'];
+    protected $fillable  = ['name', 'description' ,'active', 'transaction_type_id'];
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
@@ -15,5 +15,10 @@ class TransactionConcepts extends Model
     public function transactions()
     {
         return $this->hasMany(Transactions::class, 'concept_id');
+    }
+
+    public function transactionType()
+    {
+        return $this->belongsTo(TransactionType::class, 'transaction_type_id');
     }
 }

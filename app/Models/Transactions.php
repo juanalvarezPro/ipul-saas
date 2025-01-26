@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Transactions extends Model
 {
-    protected $fillable = ['amount', 'description','concept_id', 'transaction_type_id', 'transaction_date' ,'attachments'];
+    protected $fillable = ['amount', 'description','concept_id', 'transaction_date' ,'attachments'];
 
     protected $casts = [
         'attachments' => 'array',
@@ -36,10 +36,5 @@ class Transactions extends Model
     public function transactionConcept()
     {
         return $this->belongsTo(TransactionConcepts::class, 'concept_id');  // 'concept_id' es la clave foránea en 'transactions'
-    }
-
-    public function transactionType()
-    {
-        return $this->belongsTo(TransactionType::class, 'transaction_type_id');  // 'concept_id' es la clave foránea en 'transactions'
     }
 }
