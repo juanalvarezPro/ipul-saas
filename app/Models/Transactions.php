@@ -11,23 +11,55 @@ class Transactions extends Model
     protected $casts = [
         'attachments' => 'array',
     ];
+ /* Solo para disk Local */
+    // protected static function booted(): void
+    // {
+    //     static::deleted(function (Transactions $transactions){
+    //         foreach($transactions->attachments as $attachment){
+    //             Storage::disk('public')->delete($attachment);
+    //         }
+    //     });
 
+    //     static::updating(function (Transactions $transactions){
+    //        $attachmentsToDelete = array_diff($transactions->getOriginal('attachments'), $transactions->attachments);
+    //        foreach($attachmentsToDelete as $attachment){
+    //         Storage::disk('public')->delete($attachment);
+    //        }
+    //     });
+
+    // }
+
+
+    /* boot para Cloudflare r2 */
     protected static function booted(): void
     {
-        static::deleted(function (Transactions $transactions){
-            foreach($transactions->attachments as $attachment){
-                Storage::disk('public')->delete($attachment);
+        static::deleted(function (Transactions $transactions) {
+            $attachments = is_string($transactions->attachments) 
+                ? explode(',', $transactions->attachments) 
+                : ($transactions->attachments ?? []);
+    
+            foreach ($attachments as $attachment) {
+                Storage::disk('r2')->delete($attachment);
             }
         });
-
-        static::updating(function (Transactions $transactions){
-           $attachmentsToDelete = array_diff($transactions->getOriginal('attachments'), $transactions->attachments);
-           foreach($attachmentsToDelete as $attachment){
-            Storage::disk('public')->delete($attachment);
-           }
+    
+        static::updating(function (Transactions $transactions) {
+            $originalAttachments = is_string($transactions->getOriginal('attachments'))
+                ? explode(',', $transactions->getOriginal('attachments'))
+                : ($transactions->getOriginal('attachments') ?? []);
+    
+            $currentAttachments = is_string($transactions->attachments)
+                ? explode(',', $transactions->attachments)
+                : ($transactions->attachments ?? []);
+    
+            $attachmentsToDelete = array_diff($originalAttachments, $currentAttachments);
+    
+            foreach ($attachmentsToDelete as $attachment) {
+                Storage::disk('r2')->delete($attachment);
+            }
         });
-
     }
+
 
     public function team(){
         return $this->belongsTo(Team::class);
