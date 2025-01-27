@@ -30,12 +30,20 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandLogo(asset('images/LogoIPUL_Light.webp'))
+            ->darkModeBrandLogo(asset('images/LogoIPUL_Dark.webp'))
+            ->brandLogoHeight('3rem')
             ->tenant(Team::class)
             ->tenantProfile(EditTeamProfile::class)
             ->tenantRegistration(RegisterTeam::class)
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'danger' => Color::Rose,
+                'gray' => Color::Gray,
+                'info' => Color::Blue,
+                'primary' => Color::Blue,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
