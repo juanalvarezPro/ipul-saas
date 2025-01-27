@@ -48,10 +48,10 @@ class TransactionsResource extends Resource
                 Forms\Components\FileUpload::make('attachments')
                 ->label('Archivos adjuntos (opcional)')
                     ->openable()
-                    ->multiple()
-                    ->disk('public')
-                    ->visibility('public')
-                    ->preserveFilenames()
+                    ->disk('r2')
+                    ->directory('form-attachments')
+                    ->previewable(false)
+                    ->downloadable()
                     ->columnSpanFull(),
             ])->columns(3);
     }
