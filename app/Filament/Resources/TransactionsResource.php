@@ -37,7 +37,6 @@ class TransactionsResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->live()
                     ->required(),
                 Forms\Components\DatePicker::make('transaction_date')
                     ->label('Fecha del Movimiento')
