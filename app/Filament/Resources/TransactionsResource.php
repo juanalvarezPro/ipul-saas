@@ -12,57 +12,88 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
 
 class TransactionsResource extends Resource
 {
     protected static ?string $model = Transactions::class;
     protected static ?string $tenantOwnershipRelationshipName = 'team';
     protected static ?string $tenantRelationshipName = 'transactions';
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationLabel = 'Movimientos';
+    protected static ?string $navigationIcon = 'heroicon-o-document-currency-dollar';
+    protected static ?string $modelLabel = 'Movimiento';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('amount')
-                    ->label('Amount')
+                    ->label('Monto')
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('description')
-                    ->label('Description')
+                Forms\Components\Select::make('concept_id')
+                    ->relationship('transactionConcept', 'name',  fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant())->where('active', true))
+                    ->label('Concepto')
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->live()
                     ->required(),
-                  Forms\Components\Select::make('concept_id')
-                  ->relationship('transactionConcept', 'name') 
-                  ->required(),
                 Forms\Components\DatePicker::make('transaction_date')
-                    ->label('Date')
+                    ->label('Fecha del Movimiento')
+                    ->native(false)
                     ->required(),
-                    Forms\Components\FileUpload::make('attachments')
+                    Forms\Components\TextInput::make('description')
+                    ->label('Descripción (opcional)')
+                    ->columnSpanFull(),
+                Forms\Components\FileUpload::make('attachments')
+                ->label('Archivos adjuntos (opcional)')
                     ->openable()
                     ->multiple()
                     ->disk('public')
                     ->visibility('public')
                     ->preserveFilenames()
-            ]);
+                    ->columnSpanFull(),
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->columns([
-            Tables\Columns\TextColumn::make('amount')
-                ->label('Amount')
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('description')
-                ->label('Description')
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('transactionConcept.transactionType.name')
-                ->label('Movimiento')
-                ->sortable()
-                ->searchable(),
-        ])
+            ->columns([
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Monto')
+                    ->sortable()
+                    ->money('PAB')
+                    ->searchable(),
+                    Tables\Columns\TextColumn::make('transactionConcept.name')
+                    ->label('Conceptos')
+                    ->sortable()
+                    ->searchable(),    
+                Tables\Columns\TextColumn::make('transactionConcept.transactionType.name')
+                    ->label('Movimientos')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Ingreso' => 'success',
+                        'Egreso' => 'danger',
+                         default => 'info',
+                    })
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Descripcion')
+                    ->sortable()
+                    ->searchable()
+                    ->limit(20)
+                    ->toggleable(isToggledHiddenByDefault: true),
+                    Tables\Columns\TextColumn::make('transaction_date')
+                    ->label('Fecha del Movimiento')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),   
+
+            ])
+            ->defaultSort('id', 'desc')
             ->filters([
                 //
             ])
