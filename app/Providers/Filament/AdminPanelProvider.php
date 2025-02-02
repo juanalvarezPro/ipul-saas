@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Tenancy\RegisterTeam;
+use App\Filament\Pages\Auth\Login as myLogin;
 use App\Models\Team;
 use App\Filament\Pages\Tenancy\EditTeamProfile;
 use App\Http\Middleware\ApplyTenantScopes;
@@ -36,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->tenant(Team::class)
             ->tenantProfile(EditTeamProfile::class)
             ->tenantRegistration(RegisterTeam::class)
-            ->login()
+            ->login(myLogin::class)
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
@@ -45,10 +46,6 @@ class AdminPanelProvider extends PanelProvider
                 'success' => Color::Emerald,
                 'warning' => Color::Orange,
             ])
-            ->renderHook( 
-                'panels::auth.login.form.after',
-                fn () => view('auth.socialite.google')
-            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -72,7 +69,6 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->registration()
             ;
     }
 }
