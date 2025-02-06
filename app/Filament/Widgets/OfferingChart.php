@@ -51,7 +51,7 @@ class OfferingChart extends ChartWidget
         foreach ($concepts as $concept) {
             // Filtrar las transacciones por concepto, tenant y año actual
             $transactions = Transactions::where('concept_id', $concept->id)
-                ->where('team_id', $tenant->id)  // Filtrar por el tenant actual
+                ->where('workspace_id', $tenant->id)  // Filtrar por el tenant actual
                 ->whereYear('transaction_date', Carbon::now()->year)  // Filtrar por el año actual
                 ->get();
 
