@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->brandLogo(asset('images/LogoIPUL_Light.webp'))
             ->darkModeBrandLogo(asset('images/LogoIPUL_Dark.webp'))
-            ->brandLogoHeight('3rem')
+            ->brandLogoHeight('2.2rem')
             ->tenant(workspace::class)
             ->tenantProfile(EditWorkspaceProfile::class)
             ->tenantRegistration(RegisterWorkspace::class)
