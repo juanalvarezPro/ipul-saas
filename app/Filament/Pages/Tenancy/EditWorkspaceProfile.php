@@ -1,23 +1,28 @@
 <?php
 
 namespace App\Filament\Pages\Tenancy;
- 
+
+use App\Models\Workspace;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
  
-class EditTeamProfile extends EditTenantProfile
+class EditWorkspaceProfile extends EditTenantProfile
 {
     public static function getLabel(): string
     {
-        return 'Team profile';
+        return 'Editar Workspace';
     }
  
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name'),
+                TextInput::make('name')                    
+                ->label('Nombre del Workspace')
+                ->required()
+                ->maxLength(15)
+                ->unique(Workspace::class, 'name'),
                 // ...
             ]);
     }

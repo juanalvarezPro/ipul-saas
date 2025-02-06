@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TransactionConcepts extends Model
 {
     protected $fillable  = ['name', 'description' ,'active', 'transaction_type_id'];
-    public function team(): BelongsTo
+    public function workspace(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Workspace::class);
     }
     public function transactions()
     {

@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
     //    URL::forceScheme('https'); 
       Event::listen(GoogleLoginProvider::class);
-      Event::listen(Login::class, NotifyOnNewDeviceLogin::class);
+      // Event::listen(Login::class, NotifyOnNewDeviceLogin::class);
     
     }
 }

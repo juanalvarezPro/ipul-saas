@@ -17,7 +17,7 @@ use Filament\Facades\Filament;
 class TransactionsResource extends Resource
 {
     protected static ?string $model = Transactions::class;
-    protected static ?string $tenantOwnershipRelationshipName = 'team';
+    protected static ?string $tenantOwnershipRelationshipName = 'workspace';
     protected static ?string $tenantRelationshipName = 'transactions';
     protected static ?string $navigationLabel = 'Movimientos';
     protected static ?string $navigationIcon = 'heroicon-o-document-currency-dollar';

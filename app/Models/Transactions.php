@@ -61,8 +61,8 @@ class Transactions extends Model
     }
 
 
-    public function team(){
-        return $this->belongsTo(Team::class);
+    public function workspace(){
+        return $this->belongsTo(Workspace::class);
     }
 
     public function transactionConcept()

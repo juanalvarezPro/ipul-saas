@@ -17,7 +17,7 @@ use Filament\Facades\Filament;
 class TransactionConceptsResource extends Resource
 {
     protected static ?string $model = TransactionConcepts::class;
-    protected static ?string $tenantOwnershipRelationshipName = 'team';
+    protected static ?string $tenantOwnershipRelationshipName = 'workspace';
     protected static ?string $tenantRelationshipName = 'transactionConcepts';
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
     protected static ?string $navigationLabel = 'Conceptos';

@@ -8,8 +8,8 @@ class TransactionType extends Model
 {
     protected $fillable  = ['name', 'active'];
 
-    public function team(): BelongsTo{
-        return $this->belongsTo(Team::class);
+    public function workspace(): BelongsTo{
+        return $this->belongsTo(Workspace::class);
     }
     public function transactionsConcepts()
     {

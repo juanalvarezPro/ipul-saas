@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string("name")->nullable(false);
             $table->boolean("active")->default(true);
-            $table->unsignedBigInteger('team_id');
+            $table->unsignedBigInteger('workspace_id');
             $table->timestamps();
 
-            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('cascade');
         });
     }
 

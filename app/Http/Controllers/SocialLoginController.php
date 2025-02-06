@@ -25,6 +25,7 @@ class SocialLoginController extends Controller
                  ['email' => $googleUser->getEmail()],
                  [
                      'name' => $googleUser->getName(),
+                     'email_verified_at' => now(),
                      'avatar' => $googleUser->getAvatar(), // Guardar la URL del avatar
                      'password' => Hash::make($googleUser->getId()), // Usar el ID de Google como contraseña
                  ]

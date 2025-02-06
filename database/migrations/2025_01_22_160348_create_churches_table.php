@@ -11,18 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('avatar')->nullable();
+        Schema::create('churches', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('address')->nullable(false);
+            $table->boolean('active')->default(true);
+            $table->timestamps();
+
         });
     }
+    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('avatar');
-        });
+        Schema::dropIfExists('churches');
     }
 };

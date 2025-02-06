@@ -61,24 +61,21 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         return $this->avatar;
     }
 
-    public function getTenants(Panel $panel): Collection
+    public function workspaces(): BelongsToMany
     {
-        return $this->teams;
+        return $this->belongsToMany(Workspace::class);
     }
 
-    /**
-     * The teams that belong to the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function teams(): BelongsToMany
+    public function getTenants(Panel $panel): Collection
     {
-        return $this->belongsToMany(Team::class);
+        return $this->workspaces;
     }
+
+
     
     public function canAccessTenant(Model $tenant): bool
     {
-        return $this->teams()->whereKey($tenant)->exists();
+        return $this->workspaces()->whereKey($tenant)->exists();
     }
 
     public function canAccessPanel(Panel $panel): bool

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\hasMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Team extends Model
+class Workspace extends Model
 {
     protected $guarded = [];
     

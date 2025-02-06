@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string("name")->nullable(false);
             $table->text("description")->nullable();
             $table->boolean("active")->default(true);
-            $table->unsignedBigInteger('team_id');
+            $table->unsignedBigInteger('workspace_id');
             $table->unsignedBigInteger('transaction_type_id');
             $table->timestamps();
-            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
+            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('cascade');
             $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
         });
     }

@@ -2,10 +2,10 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Tenancy\RegisterTeam;
+use App\Filament\Pages\Tenancy\RegisterWorkspace;
 use App\Filament\Pages\Auth\Login as myLogin;
-use App\Models\Team;
-use App\Filament\Pages\Tenancy\EditTeamProfile;
+use App\Models\workspace;
+use App\Filament\Pages\Tenancy\EditWorkspaceProfile;
 use App\Http\Middleware\ApplyTenantScopes;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -15,7 +15,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -34,9 +33,9 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('images/LogoIPUL_Light.webp'))
             ->darkModeBrandLogo(asset('images/LogoIPUL_Dark.webp'))
             ->brandLogoHeight('3rem')
-            ->tenant(Team::class)
-            ->tenantProfile(EditTeamProfile::class)
-            ->tenantRegistration(RegisterTeam::class)
+            ->tenant(workspace::class)
+            ->tenantProfile(EditWorkspaceProfile::class)
+            ->tenantRegistration(RegisterWorkspace::class)
             ->login(myLogin::class)
             ->colors([
                 'danger' => Color::Rose,
