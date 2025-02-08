@@ -12,5 +12,5 @@ Route::get('/auth/google', [SocialLoginController::class, 'redirectToProvider'])
 Route::get('/auth/google/callback', [SocialLoginController::class, 'socialCallback']);
 
 Route::fallback(function () {
-    return redirect('/admin');
+    return redirect('/app');
 });
