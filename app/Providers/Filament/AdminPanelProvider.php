@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Tenancy\RegisterWorkspace;
-use App\Filament\Pages\Auth\Login as myLogin;
 use App\Models\workspace;
 use App\Filament\Pages\Tenancy\EditWorkspaceProfile;
 use App\Http\Middleware\ApplyTenantScopes;
@@ -36,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->tenant(workspace::class)
             ->tenantProfile(EditWorkspaceProfile::class)
             ->tenantRegistration(RegisterWorkspace::class)
-            ->login(myLogin::class)
+            ->login()
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
