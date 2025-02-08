@@ -30,7 +30,9 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         'name',
         'email',
         'password',
-        'avatar'
+        'avatar',
+        'status',
+        'email_personal'
     ];
 
     /**
@@ -56,6 +58,12 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         ];
     }
 
+    // Relación con la Iglesia
+    public function church()
+    {
+        return $this->belongsTo(Church::class);
+    }
+
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->avatar;
@@ -72,7 +80,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
     }
 
 
-    
+
     public function canAccessTenant(Model $tenant): bool
     {
         return $this->workspaces()->whereKey($tenant)->exists();
