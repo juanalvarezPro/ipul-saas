@@ -11,21 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('church_users', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('church_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('church_id')->nullable();
             $table->foreign('church_id')->references('id')->on('churches');
-
         });
     }
-    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('church_users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('church_id');
+        });
     }
 };
