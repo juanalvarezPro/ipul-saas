@@ -70,6 +70,9 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
     {
         return $this->avatar;
     }
+    public function isApproved(): bool
+    {
+        return $this->status === userStatus::APPROVED;}
 
     public function workspaces(): BelongsToMany
     {
@@ -90,7 +93,11 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // return str_ends_with($this->email, '@ipulsaas.com') && $this->hasVerifiedEmail();
-        return true;
+          // Verificar si el usuario está aprobado antes de acceder al panel
+          if (!$this->isApproved()) {
+            return false; // El usuario no tiene acceso si no está aprobado
+        }
+        
+        return true; // Si está aprobado, puede acceder
     }
 }
