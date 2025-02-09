@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\userStatus;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
@@ -55,6 +56,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status' => userStatus::class
         ];
     }
 

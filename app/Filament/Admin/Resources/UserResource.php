@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\userStatus;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
 use App\Models\User;
@@ -33,15 +34,14 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email_personal')
                     ->email()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('is_admin')
-                    ->required(),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Forms\Components\Select::make('status')
+                ->options(userStatus::class) 
+                ->default(userStatus::PENDING) 
+                ->required(),
                 Forms\Components\TextInput::make('avatar')
                     ->maxLength(255),
             ]);
@@ -62,9 +62,7 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\IconColumn::make('is_admin')
-                ->boolean(),
+                Tables\Columns\TextColumn::make('status')->badge(),
                 Tables\Columns\ImageColumn::make('avatar'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
