@@ -17,10 +17,9 @@ return new class extends Migration
             $table->text("description")->nullable();
             $table->boolean("active")->default(true);
             $table->unsignedBigInteger('workspace_id');
-            $table->unsignedBigInteger('transaction_type_id');
+            $table->string('transaction_type');
             $table->timestamps();
             $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('cascade');
-            $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
         });
     }
 

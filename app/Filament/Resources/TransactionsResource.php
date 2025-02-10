@@ -70,14 +70,9 @@ class TransactionsResource extends Resource
                     ->label('Conceptos')
                     ->sortable()
                     ->searchable(),    
-                Tables\Columns\TextColumn::make('transactionConcept.transactionType.name')
+                Tables\Columns\TextColumn::make('transactionConcept.transaction_type')
                     ->label('Movimientos')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Ingreso' => 'success',
-                        'Egreso' => 'danger',
-                         default => 'info',
-                    })
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')

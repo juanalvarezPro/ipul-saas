@@ -2,17 +2,14 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\transactionStatus;
 use App\Filament\Resources\TransactionConceptsResource\Pages;
-use App\Filament\Resources\TransactionConceptsResource\RelationManagers;
 use App\Models\TransactionConcepts;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Facades\Filament;
 
 class TransactionConceptsResource extends Resource
 {
@@ -22,7 +19,7 @@ class TransactionConceptsResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
     protected static ?string $navigationLabel = 'Conceptos';
     protected static ?string $navigationGroup = 'Gestión del Sistema';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
     protected static ?string $modelLabel = "Concepto";
 
 
@@ -32,17 +29,11 @@ class TransactionConceptsResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')->label('Nombre')->required(),
                 Forms\Components\TextInput::make('description')->label('Descripción'),
-                Forms\Components\Select::make('transaction_type_id')
+                Forms\Components\Select::make('transaction_type')
                     ->label('Movimiento')
-                    ->relationship(
-                        'transactionType',
-                        'name',
-                        fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant())->where('active', true)
-                    )
-                    ->searchable()
-                    ->preload()
+                    ->options(transactionStatus::class)
+                    ->default(transactionStatus::INCOME)
                     ->required()
-                    ->live()
             ])
             ->columns(3)
         ;
@@ -61,12 +52,10 @@ class TransactionConceptsResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('transactionType.name')
-                    ->label('Movimiento')
-                    ->sortable()
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('transaction_type')
+                    ->badge(),
                 Tables\Columns\ToggleColumn::make('active')->label('Activo')
-                
+
 
             ])
             ->filters([

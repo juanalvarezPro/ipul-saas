@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\transactionStatus;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Transactions;
@@ -12,15 +13,15 @@ class AppStatsOverview extends BaseWidget
     protected function getStats(): array
     {
 // Calcular los ingresos para el tenant actual
-$totalIngresos = Transactions::whereHas('transactionConcept.transactionType', function ($query) {
-    $query->where('name', 'Ingreso');
+$totalIngresos = Transactions::whereHas('transactionConcept', function ($query) {
+    $query->where('transaction_type', transactionStatus::INCOME);
 })
 ->whereBelongsTo(Filament::getTenant()) // Filtro por el tenant actual
 ->sum('amount');
 
 // Calcular los egresos para el tenant actual
-$totalEgresos = Transactions::whereHas('transactionConcept.transactionType', function ($query) {
-    $query->where('name', 'Egreso');
+$totalEgresos = Transactions::whereHas('transactionConcept', function ($query) {
+    $query->where('transaction_type', transactionStatus::EXPENSE);
 })
 ->whereBelongsTo(Filament::getTenant()) // Filtro por el tenant actual
 ->sum('amount');
