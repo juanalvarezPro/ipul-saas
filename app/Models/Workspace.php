@@ -20,11 +20,6 @@ class Workspace extends Model
         return $this->hasMany(TransactionConcepts::class);
     }
 
-    public function TransactionTypes(): hasMany
-    {
-        return $this->hasMany(TransactionType::class);
-    }
-
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
