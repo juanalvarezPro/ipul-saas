@@ -17,7 +17,7 @@ public static function getLabel(): string
 }
 
 public function form(Form $form): Form
-{
+{ 
     return $form
     ->schema([
         Section::make('¿Qué es un Workspace?') // Título llamativo
@@ -27,7 +27,6 @@ public function form(Form $form): Form
                     ->label('Nombre del Workspace')
                     ->required()
                     ->maxLength(15)
-                    ->unique(Workspace::class, 'name') // Asegura que el nombre sea único
                     ->placeholder('Ejemplo: Contabilidad, Ministerio de Música, Eventos, etc.') // Ejemplos más específicos
                     ->helperText('Este campo tiene como valor predeterminado "General", pero puedes personalizarlo.') // Explicación clara
                     ->default('General'),
