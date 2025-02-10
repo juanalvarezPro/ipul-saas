@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('country_id')->default(170);
-            $table->unsignedBigInteger('Province_id');
+            $table->unsignedBigInteger('province_id');
             $table->unsignedBigInteger('corregimiento_id');
             $table->string('pastor_name'); 
             $table->string('email')->nullable();
