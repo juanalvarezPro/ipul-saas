@@ -93,10 +93,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
 
     public function canAccessPanel(Panel $panel): bool
     {
-          // Verificar si el usuario está aprobado antes de acceder al panel
-          if (!$this->isApproved()) {
-            return false; // El usuario no tiene acceso si no está aprobado
-        }
+        //   // Verificar si el usuario está aprobado antes de acceder al panel
+        //   if (!$this->isApproved()) {
+        //     return false; // El usuario no tiene acceso si no está aprobado
+        // }
         
         return true; // Si está aprobado, puede acceder
     }
