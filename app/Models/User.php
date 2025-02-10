@@ -66,6 +66,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         return $this->belongsTo(Church::class);
     }
 
+    public function role () {
+        return $this->belongsTo(Role::class);
+    }
+
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->avatar;

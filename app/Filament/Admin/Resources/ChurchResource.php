@@ -28,7 +28,7 @@ class ChurchResource extends Resource
     protected static int $idPanama = 170;
     protected static ?string $navigationLabel = 'Iglesias';
     protected static ?string $modelLabel = "Iglesia";
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
     protected static ?string $navigationGroup = 'Gestión del Sistema';
 
     public static function form(Form $form): Form
