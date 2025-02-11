@@ -72,8 +72,16 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar;
+        $url_R2 = env('R2_URL');
+        
+        // Verifica si el avatar existe antes de generar la URL
+        if ($this->avatar) {
+            return $url_R2 . '/' . $this->avatar;
+        }
+    
+        return null; // Retorna null si el avatar no existe
     }
+    
     public function isApproved(): bool
     {
         return $this->status === userStatus::APPROVED;}
