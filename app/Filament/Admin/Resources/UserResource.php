@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\userStatus;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers;
+use Filament\Forms\Components\Actions\Action;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,6 +21,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserResource extends Resource
 {
@@ -35,79 +39,84 @@ class UserResource extends Resource
             ->schema([
                 // Sección de Información Personal
                 Section::make('Información Personal')
-                    ->columns(4) // Título de la sección
+                    ->columns(3) // Título de la sección
                     ->schema([
-                        // Campo para el nombre
-                        TextInput::make('name')
-                            ->label('Nombre')
-                            ->required()
-                            ->maxLength(255),
+                        Section::make('')
+                            ->columnSpan(1)
+                            ->schema([
+                                FileUpload::make('avatar')
+                                    ->hiddenLabel()
+                                    ->image()
+                                    ->previewable()
+                                    ->alignCenter()
+                                    ->disk('r2')
+                                    ->directory('avatars')
+                                    ->imageEditor()
+                                    ->maxSize(500)
+                                    ->circleCropper()
+                                    ->avatar(),
+                                TextInput::make('name')
+                                    ->label('Nombre')
+                                    ->required()
+                                    ->maxLength(20),
+                                Select::make('role_id')
+                                    ->label('Rol')
+                                    ->relationship('role', 'name')
+                                    ->default(2) // Default a "Usuario"
+                                    ->required(),
+                                Select::make('status')
+                                    ->label('Estado')
+                                    ->options(userStatus::class)
+                                    ->default(userStatus::PENDING)
+                                    ->required(),
 
-                        // Campo para el correo electrónico
-                        TextInput::make('email')
-                            ->label('Correo Coorporativo')
-                            ->email()
-                            ->required()
-                            ->helperText('Este correo es utilizado para acceder al panel'),
+                            ]),
 
-                        // Campo para el correo electrónico personal (opcional)
-                        TextInput::make('email_personal')
-                            ->label('Correo Electrónico Personal')
-                            ->email()
-                            ->nullable()
-                            ->helperText('Este correo (opcional) se usará para notificaciones y alertas importantes.'),
-                        // Campo para seleccionar la iglesia
-                        Select::make('church_id')
-                            ->label('Iglesia')
-                            ->relationship('church', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
+                        Section::make('')
+                            ->columnSpan(2)
+                            ->schema(
+                                [    // Campo para seleccionar la iglesia
+                                    Select::make('church_id')
+                                        ->label('Iglesia a la que se congrega')
+                                        ->relationship('church', 'name')
+                                        ->searchable()
+                                        ->optionsLimit(5)
+                                        ->preload()
+                                        ->required()
+                                        ->placeholder('Seleccione una iglesia'),
+
+                                    // Campo para el correo electrónico
+                                    TextInput::make('email')
+                                        ->label('Correo Corporativo')
+                                        ->email()
+                                        ->required(),
+
+                                    // Campo para el correo electrónico personal (opcional)
+                                    TextInput::make('email_personal')
+                                        ->label('Correo Personal')
+                                        ->email()
+                                        ->nullable(),
+
+                                    TextInput::make('password')
+                                        ->label('Nueva Contraseña')
+                                        ->password()
+                                        ->revealable()
+                                        ->currentPassword()
+                                        ->dehydrateStateUsing(
+                                            fn($state) =>
+                                            filled($state) ? Hash::make($state) : Auth::user()->password // Si hay nueva, la encripta; si no, deja la actual
+                                        )
+                                        ->suffixAction(
+                                            Action::make('generatePassword')
+                                                ->icon('heroicon-o-key')
+                                                ->tooltip('Generar contraseña segura')
+                                                ->action(fn($state, callable $set) => $set('password', Str::random(12))) // Genera y llena el campo
+                                        )
+                                        ->minLength(8)
+                                        ->helperText('Déjalo vacío si no deseas cambiar tu contraseña.'),
+                                ]
+                            ),
                     ]),
-
-                // Sección de Contraseña y Estado
-                Section::make('Contraseña y Estado')
-                    ->columns(2)
-                    ->schema([
-                        // Campo para la contraseña
-                        TextInput::make('password')
-                            ->label('Contraseña')
-                            ->password()
-                            ->required()
-                            ->minLength(8),
-
-                        // Selección del estado
-                        Select::make('status')
-                            ->options(userStatus::class)
-                            ->default(userStatus::PENDING)
-                            ->required()
-                    ]),
-
-                    Section::make('Configuración del Rol')
-                    ->schema([
-                        // Selección de Rol
-                        Select::make('role_id')
-                            ->label('Rol')
-                            ->relationship('role', 'name')
-                            ->default(2) // Default a "Usuario"
-                            ->required(),
-                    ]),
-
-                // Sección de Avatar y Datos de la Iglesia
-                Section::make('Avatar')
-                    ->schema([
-
-                        // Campo para subir el avatar (imagen de perfil)
-                        FileUpload::make('avatar')
-                            ->label('Avatar')
-                            ->image()
-                            ->disk('r2')  // Define el disco de almacenamiento en 'public'
-                            ->directory('avatars') // Carpeta donde se guardarán las imágenes
-                            ->maxSize(1024) // Tamaño máximo en KB
-                            ->helperText('Sube una imagen para el avatar, solo se permiten archivos de tipo imagen.')
-                            ->preserveFilenames(),
-                    ]),
-
             ]);
     }
 
