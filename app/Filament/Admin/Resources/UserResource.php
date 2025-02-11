@@ -36,88 +36,57 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                // Sección de Información Personal
-                Section::make('Información Personal')
-                    ->columns(3) // Título de la sección
-                    ->schema([
-                        Section::make('')
-                            ->columnSpan(1)
-                            ->schema([
-                                FileUpload::make('avatar')
-                                    ->hiddenLabel()
-                                    ->image()
-                                    ->previewable()
-                                    ->alignCenter()
-                                    ->disk('r2')
-                                    ->directory('avatars')
-                                    ->imageEditor()
-                                    ->maxSize(500)
-                                    ->circleCropper()
-                                    ->avatar(),
-                                TextInput::make('name')
-                                    ->label('Nombre')
-                                    ->required()
-                                    ->maxLength(20),
-                                Select::make('role_id')
-                                    ->label('Rol')
-                                    ->relationship('role', 'name')
-                                    ->default(2) // Default a "Usuario"
-                                    ->required(),
-                                Select::make('status')
-                                    ->label('Estado')
-                                    ->options(userStatus::class)
-                                    ->default(userStatus::PENDING)
-                                    ->required(),
+            ->schema(
+                [
+                    TextInput::make('name')
+                        ->label('Nombre')
+                        ->required()
+                        ->maxLength(20),
+                    Select::make('status')
+                        ->label('Estado')
+                        ->options(userStatus::class)
+                        ->default(userStatus::PENDING)
+                        ->required(),  // Campo para seleccionar la iglesia
+                    Select::make('church_id')
+                        ->label('Iglesia a la que se congrega')
+                        ->relationship('church', 'name')
+                        ->searchable()
+                        ->optionsLimit(5)
+                        ->preload()
+                        ->required()
+                        ->placeholder('Seleccione una iglesia'),
 
-                            ]),
+                    // Campo para el correo electrónico
+                    TextInput::make('email')
+                        ->label('Correo Corporativo')
+                        ->email()
+                        ->required(),
 
-                        Section::make('')
-                            ->columnSpan(2)
-                            ->schema(
-                                [    // Campo para seleccionar la iglesia
-                                    Select::make('church_id')
-                                        ->label('Iglesia a la que se congrega')
-                                        ->relationship('church', 'name')
-                                        ->searchable()
-                                        ->optionsLimit(5)
-                                        ->preload()
-                                        ->required()
-                                        ->placeholder('Seleccione una iglesia'),
+                    // Campo para el correo electrónico personal (opcional)
+                    TextInput::make('email_personal')
+                        ->label('Correo Personal')
+                        ->email()
+                        ->nullable(),
 
-                                    // Campo para el correo electrónico
-                                    TextInput::make('email')
-                                        ->label('Correo Corporativo')
-                                        ->email()
-                                        ->required(),
-
-                                    // Campo para el correo electrónico personal (opcional)
-                                    TextInput::make('email_personal')
-                                        ->label('Correo Personal')
-                                        ->email()
-                                        ->nullable(),
-
-                                    TextInput::make('password')
-                                        ->label('Nueva Contraseña')
-                                        ->password()
-                                        ->revealable()
-                                        ->currentPassword()
-                                        ->dehydrateStateUsing(
-                                            fn($state) =>
-                                            filled($state) ? Hash::make($state) : Auth::user()->password // Si hay nueva, la encripta; si no, deja la actual
-                                        )
-                                        ->suffixAction(
-                                            Action::make('generatePassword')
-                                                ->icon('heroicon-o-key')
-                                                ->tooltip('Generar contraseña segura')
-                                                ->action(fn($state, callable $set) => $set('password', Str::random(12))) // Genera y llena el campo
-                                        )
-                                        ->minLength(8)
-                                        ->helperText('Déjalo vacío si no deseas cambiar tu contraseña.'),
-                                ]
-                            ),
-                    ]),
-            ]);
+                    TextInput::make('password')
+                        ->label('Nueva Contraseña')
+                        ->password()
+                        ->revealable()
+                        ->currentPassword()
+                        ->dehydrateStateUsing(
+                            fn($state) =>
+                            filled($state) ? Hash::make($state) : Auth::user()->password // Si hay nueva, la encripta; si no, deja la actual
+                        )
+                        ->suffixAction(
+                            Action::make('generatePassword')
+                                ->icon('heroicon-o-key')
+                                ->tooltip('Generar contraseña segura')
+                                ->action(fn($state, callable $set) => $set('password', Str::random(12))) // Genera y llena el campo
+                        )
+                        ->minLength(8)
+                        ->helperText('Déjalo vacío si no deseas cambiar tu contraseña.'),
+                ]
+            );
     }
 
     public static function table(Table $table): Table
@@ -125,26 +94,17 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nombre')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_personal')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('status')->badge(),
-                Tables\Columns\ImageColumn::make('avatar'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('church.name')
+                    ->label('Iglesia')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
             ])
             ->filters([
                 //
