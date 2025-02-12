@@ -27,7 +27,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'password',
         'avatar',
         'status',
-        'email_personal'
+        'email_personal',
+        'church_id'
     ];
 
     /**
@@ -57,7 +58,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     // Relación con la Iglesia
     public function church()
     {
-        return $this->belongsTo(Church::class);
+        return $this->belongsTo(Church::class, 'church_id');
     }
 
     public function transactions () {
