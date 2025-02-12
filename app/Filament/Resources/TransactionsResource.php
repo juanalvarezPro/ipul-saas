@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionsResource extends Resource
 {
@@ -22,6 +23,10 @@ class TransactionsResource extends Resource
     protected static ?string $navigationLabel = 'Movimientos';
     protected static ?string $navigationIcon = 'heroicon-o-document-currency-dollar';
     protected static ?string $modelLabel = 'Movimiento';
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('church_id', Auth::user()->church_id);
+    }
 
     public static function form(Form $form): Form
     {
@@ -32,7 +37,7 @@ class TransactionsResource extends Resource
                     ->numeric()
                     ->required(),
                 Forms\Components\Select::make('concept_id')
-                    ->relationship('transactionConcept', 'name',  fn(Builder $query) => $query->whereBelongsTo(Filament::getTenant())->where('active', true))
+                    ->relationship('transactionConcept', 'name')
                     ->label('Concepto')
                     ->searchable()
                     ->preload()

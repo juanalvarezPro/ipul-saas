@@ -12,10 +12,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionsResource extends Resource
 {
     protected static ?string $model = Transactions::class;
+    
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -53,9 +55,6 @@ class TransactionsResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('transaction_date')
                     ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('workspace_id')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('attachments')
                     ->searchable(),
