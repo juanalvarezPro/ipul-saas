@@ -12,7 +12,6 @@ class CreateTransactionConcepts extends CreateRecord
     protected static string $resource = TransactionConceptsResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array {
-
         $data['church_id'] = Auth::user()->church_id;
         $data['user_id'] = Auth::user()->id;
         return $data;

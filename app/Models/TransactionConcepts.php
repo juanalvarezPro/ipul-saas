@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TransactionConcepts extends Model
 {
-    protected $fillable  = ['name', 'description' ,'active', 'transaction_type'];
+    protected $fillable  = ['name', 'description' ,'active', 'transaction_type', 'church_id', 'user_id'];
 
     protected $casts = [
         'transaction_type' => transactionStatus::class

@@ -72,7 +72,6 @@ class UserResource extends Resource
                         ->label('Nueva Contraseña')
                         ->password()
                         ->revealable()
-                        ->currentPassword()
                         ->dehydrateStateUsing(
                             fn($state) =>
                             filled($state) ? Hash::make($state) : Auth::user()->password // Si hay nueva, la encripta; si no, deja la actual
