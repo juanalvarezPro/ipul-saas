@@ -34,4 +34,10 @@ class Church extends Model
     return $this->belongsTo(City::class, 'corregimiento_id');
 }
 
+public function transactions()
+{
+    return $this->hasMany(Transactions::class);
+}
+
+
 }
