@@ -6,10 +6,12 @@ use App\Enums\transactionStatus;
 use App\Filament\Resources\TransactionConceptsResource\Pages;
 use App\Models\TransactionConcepts;
 use Filament\Forms;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionConceptsResource extends Resource
 {
@@ -22,6 +24,10 @@ class TransactionConceptsResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static ?string $modelLabel = "Concepto";
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('church_id', Auth::user()->church_id);
+    }
 
     public static function form(Form $form): Form
     {
