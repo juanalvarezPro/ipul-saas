@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Transactions extends Model
 {
-    protected $fillable = ['amount', 'description','concept_id', 'transaction_date' ,'attachments'];
+    protected $fillable = ['amount', 'description','concept_id', 'transaction_date' ,'attachments', 'church_id', 'user_id'];
 
     protected $casts = [
         'attachments' => 'array',
@@ -61,8 +61,12 @@ class Transactions extends Model
     }
 
 
-    public function workspace(){
-        return $this->belongsTo(Workspace::class);
+    public function church(){
+        return $this->belongsTo(Church::class, 'church_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function transactionConcept()

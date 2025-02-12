@@ -2,22 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enums\userStatus;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 
 
-class User extends Authenticatable implements FilamentUser, HasTenants, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -66,6 +60,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
         return $this->belongsTo(Church::class);
     }
 
+    public function transactions () {
+        return $this->hasMany(Transactions::class, 'concept_id');
+    }
+    public function transactionConcept () {
+        return $this->hasMany(Transactions::class, 'concept_id');
+    }
+
 
     public function getFilamentAvatarUrl(): ?string
     {
@@ -76,22 +77,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasAvata
     {
         return $this->status === userStatus::APPROVED;}
 
-    public function workspaces(): BelongsToMany
-    {
-        return $this->belongsToMany(Workspace::class);
-    }
-
-    public function getTenants(Panel $panel): Collection
-    {
-        return $this->workspaces;
-    }
-
-
-
-    public function canAccessTenant(Model $tenant): bool
-    {
-        return $this->workspaces()->whereKey($tenant)->exists();
-    }
 
     public function canAccessPanel(Panel $panel): bool
     {

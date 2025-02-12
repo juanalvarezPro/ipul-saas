@@ -27,14 +27,12 @@ class AppPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->registration()
             ->id('app')
             ->path('app')
             ->brandLogo(asset('images/LogoIPUL_Light.webp'))
             ->darkModeBrandLogo(asset('images/LogoIPUL_Dark.webp'))
             ->brandLogoHeight('2.2rem')
-            ->tenant(workspace::class)
-            ->tenantProfile(EditWorkspaceProfile::class)
-            ->tenantRegistration(RegisterWorkspace::class)
             ->login()
             ->colors([
                 'danger' => Color::Rose,

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\TransactionConcepts;
+use App\Models\Transactions;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Http\Request;
@@ -18,10 +19,6 @@ class ApplyTenantScopes
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        TransactionConcepts::addGlobalScope(
-            fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())
-        );
         return $next($request);
     }
 }
