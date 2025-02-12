@@ -16,10 +16,13 @@ return new class extends Migration
             $table->string("name")->nullable(false);
             $table->text("description")->nullable();
             $table->boolean("active")->default(true);
-            $table->unsignedBigInteger('workspace_id');
             $table->string('transaction_type');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('church_id');
             $table->timestamps();
-            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('cascade');
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('church_id')->references('id')->on('churches');
         });
     }
 

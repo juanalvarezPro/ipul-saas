@@ -20,8 +20,11 @@ return new class extends Migration
             $table->string('password');
             $table->string('status')->default('pending');
             $table->string('avatar')->nullable();
+            $table->unsignedBigInteger('church_id');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('church_id')->references('id')->on('churches');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

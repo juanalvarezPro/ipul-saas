@@ -17,13 +17,15 @@ return new class extends Migration
             $table->unsignedBigInteger('concept_id'); 
             $table->date('transaction_date')->nullable(false);
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('workspace_id');
+            $table->unsignedBigInteger('church_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('attachments')->nullable();
             $table->timestamps();
     
             // Relaciones
             $table->foreign('concept_id')->references('id')->on('transaction_concepts')->onDelete('cascade');
-            $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('cascade');
+            $table->foreign('church_id')->references('id')->on('churches')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
     
