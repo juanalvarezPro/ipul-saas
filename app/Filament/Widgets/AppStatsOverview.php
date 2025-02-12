@@ -6,15 +6,17 @@ use App\Enums\transactionStatus;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Transactions;
-use App\Models\User;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
 
 class AppStatsOverview extends BaseWidget
 {
     protected function getStats(): array
     {
-        $totalIngresos = $this->getTotalIncomes();
-        $totalEgresos = $this->getTotalExpenses();
+        $churchId = Auth::user()->church_id;
+        
+        $totalIngresos = $this->getTotalIncomes($churchId);
+        $totalEgresos = $this->getTotalExpenses($churchId);
         $saldo = $totalIngresos - $totalEgresos;
 
         return [
@@ -36,21 +38,21 @@ class AppStatsOverview extends BaseWidget
         ];
     }
 
-    private function getTotalIncomes(): float
+    private function getTotalIncomes(int $churchId): float
     {
         return Transactions::whereHas('transactionConcept', function ($query) {
-            $query->where('transaction_type', TransactionStatus::INCOME);
-        })
-            ->whereBelongsTo(Filament::getTenant())
+                $query->where('transaction_type', TransactionStatus::INCOME);
+            })
+            ->where('church_id', $churchId)
             ->sum('amount');
     }
 
-    private function getTotalExpenses(): float
+    private function getTotalExpenses(int $churchId): float
     {
         return Transactions::whereHas('transactionConcept', function ($query) {
-            $query->where('transaction_type', TransactionStatus::EXPENSE);
-        })
-            ->whereBelongsTo(Filament::getTenant())
+                $query->where('transaction_type', TransactionStatus::EXPENSE);
+            })
+            ->where('church_id', $churchId)
             ->sum('amount');
     }
 }

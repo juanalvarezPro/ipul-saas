@@ -7,6 +7,7 @@ use App\Models\Transactions;
 use App\Models\TransactionConcepts;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
 
 class OfferingChart extends ChartWidget
 {
@@ -15,12 +16,14 @@ class OfferingChart extends ChartWidget
     protected function getData(): array
     { 
         $concepts = $this->getOfferingConcepts();
-        if ($concepts->isEmpty() || !$tenant = Filament::getTenant()) {
+        $churchId = Auth::user()->church_id;
+
+        if ($concepts->isEmpty()) {
             return ['datasets' => [], 'labels' => []];
         }
 
         $labels = $this->getMonthLabels();
-        $datasets = $this->generateDatasets($concepts, $tenant);
+        $datasets = $this->generateDatasets($concepts, $churchId);
 
         return ['datasets' => $datasets, 'labels' => $labels];
     }
@@ -40,12 +43,12 @@ class OfferingChart extends ChartWidget
         return ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     }
 
-    protected function generateDatasets($concepts, $tenant): array
+    protected function generateDatasets($concepts, $churchId): array
     {
         $datasets = [];
 
         foreach ($concepts as $concept) {
-            $transactions = $this->getTransactionsByConcept($concept, $tenant);
+            $transactions = $this->getTransactionsByConcept($concept, $churchId);
             $monthlyData = $this->calculateMonthlyTotals($transactions);
             
             $datasets[] = [
@@ -61,10 +64,10 @@ class OfferingChart extends ChartWidget
         return $datasets;
     }
 
-    protected function getTransactionsByConcept($concept, $tenant)
+    protected function getTransactionsByConcept($concept, $churchId)
     {
         return Transactions::where('concept_id', $concept->id)
-            ->where('workspace_id', $tenant->id)
+            ->where('church_id', $churchId)
             ->whereYear('transaction_date', Carbon::now()->year)
             ->get();
     }
