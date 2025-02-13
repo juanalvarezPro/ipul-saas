@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name")->nullable(false);
             $table->text("description")->nullable();
             $table->boolean("active")->default(true);
+            $table->boolean("is_global")->default(false);
             $table->string('transaction_type');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('church_id');
