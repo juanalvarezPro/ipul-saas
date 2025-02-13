@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
     {
                 // Crear una iglesia de prueba (solo si aún no existe alguna)
                 $church = Church::create([
+                    'id' => 1,
                     'name' => 'Iglesia General',
                     'country_id' => 170, // País por defecto, por ejemplo, Panamá
                     'province_id' => 1386, // Asumiendo que tienes una provincia con ID 1
