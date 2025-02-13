@@ -62,28 +62,23 @@ class UserResource extends Resource
                         ->email()
                         ->required(),
 
-                    // Campo para el correo electrónico personal (opcional)
-                    TextInput::make('email_personal')
-                        ->label('Correo Personal')
-                        ->email()
-                        ->nullable(),
 
-                    TextInput::make('password')
-                        ->label('Nueva Contraseña')
-                        ->password()
-                        ->revealable()
-                        ->dehydrateStateUsing(
-                            fn($state) =>
-                            filled($state) ? Hash::make($state) : Auth::user()->password // Si hay nueva, la encripta; si no, deja la actual
-                        )
-                        ->suffixAction(
-                            Action::make('generatePassword')
-                                ->icon('heroicon-o-key')
-                                ->tooltip('Generar contraseña segura')
-                                ->action(fn($state, callable $set) => $set('password', Str::random(12))) // Genera y llena el campo
-                        )
-                        ->minLength(8)
-                        ->helperText('Déjalo vacío si no deseas cambiar tu contraseña.'),
+                    // TextInput::make('password')
+                    //     ->label('Nueva Contraseña')
+                    //     ->password()
+                    //     ->revealable()
+                    //     ->dehydrateStateUsing(
+                    //         fn($state) =>
+                    //         filled($state) ? Hash::make($state) : Auth::user()->password // Si hay nueva, la encripta; si no, deja la actual
+                    //     )
+                    //     ->suffixAction(
+                    //         Action::make('generatePassword')
+                    //             ->icon('heroicon-o-key')
+                    //             ->tooltip('Generar contraseña segura')
+                    //             ->action(fn($state, callable $set) => $set('password', Str::random(12))) // Genera y llena el campo
+                    //     )
+                    //     ->minLength(8)
+                    //     ->helperText('Déjalo vacío si no deseas cambiar tu contraseña.'),
                 ]
             );
     }
