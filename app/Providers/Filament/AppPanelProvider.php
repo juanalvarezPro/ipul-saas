@@ -2,9 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Tenancy\RegisterWorkspace;
-use App\Models\workspace;
-use App\Filament\Pages\Tenancy\EditWorkspaceProfile;
+use App\Filament\Pages\Auth\LoginGoogle;
 use App\Http\Middleware\ApplyTenantScopes;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -27,13 +25,12 @@ class AppPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->registration()
             ->id('app')
             ->path('app')
             ->brandLogo(asset('images/LogoIPUL_Light.webp'))
             ->darkModeBrandLogo(asset('images/LogoIPUL_Dark.webp'))
             ->brandLogoHeight('2.2rem')
-            ->login()
+            ->login(LoginGoogle::class)
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
