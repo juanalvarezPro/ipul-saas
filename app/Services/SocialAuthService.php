@@ -25,7 +25,8 @@ class SocialAuthService
                     'status' => userStatus::PENDING,
                 ]
             );
-            if ($user->status != userStatus::APPROVED) {
+            if (($user->status != userStatus::APPROVED) || ($user->church_id === null)) {
+                Auth::logout();
                 return redirect('/pending-approval');
             }
 
