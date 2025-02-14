@@ -104,6 +104,7 @@ class ChurchResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->onlyCountries(['PA'])
                             ->focusNumberFormat(PhoneInputNumberType::E164)
+                            ->regex('/^\+5076\d{7}$/', 'El número debe comenzar con +5076 y tener 8 dígitos en total')
                             ->strictMode()
                             ,
                     ]),
@@ -122,7 +123,7 @@ class ChurchResource extends Resource
                     ->label('Corregimiento'),
                     Tables\Columns\TextColumn::make('pastor_name') // Usamos 'corregimiento.name'
                     ->label('Pastor Actual'),
-                    PhoneColumn::make('phone')->label('Celular')->displayFormat(PhoneInputNumberType::NATIONAL),
+                    PhoneColumn::make('phone')->label('Celular')->displayFormat(PhoneInputNumberType::E164),
                     Tables\Columns\ToggleColumn::make('active')->label('Activo'),
             ])
             ->filters([
