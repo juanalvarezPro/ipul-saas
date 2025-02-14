@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('street_address');
             $table->boolean('active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
 
             // Agregar claves foráneas
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');

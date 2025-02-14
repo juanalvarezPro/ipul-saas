@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('attachments')->nullable();
             $table->timestamps();
+            $table->softDeletes();
     
             // Relaciones
             $table->foreign('concept_id')->references('id')->on('transaction_concepts')->onDelete('cascade');

@@ -1,17 +1,20 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 class Transactions extends Model
 {
-    protected $fillable = ['amount', 'description','concept_id', 'transaction_date' ,'attachments', 'church_id', 'user_id'];
+    use SoftDeletes;
+    protected $fillable = ['amount', 'description', 'concept_id', 'transaction_date', 'attachments', 'church_id', 'user_id'];
 
     protected $casts = [
         'attachments' => 'array',
     ];
- /* Solo para disk Local */
+    /* Solo para disk Local */
     // protected static function booted(): void
     // {
     //     static::deleted(function (Transactions $transactions){
@@ -34,26 +37,26 @@ class Transactions extends Model
     protected static function booted(): void
     {
         static::deleted(function (Transactions $transactions) {
-            $attachments = is_string($transactions->attachments) 
-                ? explode(',', $transactions->attachments) 
+            $attachments = is_string($transactions->attachments)
+                ? explode(',', $transactions->attachments)
                 : ($transactions->attachments ?? []);
-    
+
             foreach ($attachments as $attachment) {
                 Storage::disk('r2')->delete($attachment);
             }
         });
-    
+
         static::updating(function (Transactions $transactions) {
             $originalAttachments = is_string($transactions->getOriginal('attachments'))
                 ? explode(',', $transactions->getOriginal('attachments'))
                 : ($transactions->getOriginal('attachments') ?? []);
-    
+
             $currentAttachments = is_string($transactions->attachments)
                 ? explode(',', $transactions->attachments)
                 : ($transactions->attachments ?? []);
-    
+
             $attachmentsToDelete = array_diff($originalAttachments, $currentAttachments);
-    
+
             foreach ($attachmentsToDelete as $attachment) {
                 Storage::disk('r2')->delete($attachment);
             }
@@ -61,11 +64,13 @@ class Transactions extends Model
     }
 
 
-    public function church(){
+    public function church()
+    {
         return $this->belongsTo(Church::class, 'church_id');
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 

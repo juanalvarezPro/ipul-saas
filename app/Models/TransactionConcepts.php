@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Enums\transactionStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TransactionConcepts extends Model
 {
-    protected $fillable  = ['name', 'description' ,'active', 'transaction_type', 'church_id', 'user_id'];
+    use SoftDeletes;
+
+    protected $fillable  = ['name', 'description', 'active', 'transaction_type', 'church_id', 'user_id'];
 
     protected $casts = [
         'transaction_type' => transactionStatus::class
@@ -18,7 +21,8 @@ class TransactionConcepts extends Model
         return $this->hasMany(Transactions::class, 'concept_id');
     }
 
-    public function user () {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 }

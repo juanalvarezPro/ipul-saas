@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Church extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'country_id',
@@ -30,14 +33,12 @@ class Church extends Model
     }
 
     public function corregimiento()
-{
-    return $this->belongsTo(City::class, 'corregimiento_id');
-}
+    {
+        return $this->belongsTo(City::class, 'corregimiento_id');
+    }
 
-public function transactions()
-{
-    return $this->hasMany(Transactions::class);
-}
-
-
+    public function transactions()
+    {
+        return $this->hasMany(Transactions::class);
+    }
 }
