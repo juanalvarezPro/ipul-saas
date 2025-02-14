@@ -32,6 +32,7 @@ class UserResource extends Resource
     protected static ?string $modelLabel = "Feligrés";
     protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationGroup = 'Gestión del Sistema';
+    protected static ?string $unassignedChurch = 'Sin Asignar';
 
     public static function form(Form $form): Form
     {
@@ -97,7 +98,11 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('church.name')
                     ->label('Iglesia')
-                    ->searchable(),
+                    ->searchable()
+                    ->getStateUsing(fn($record) => $record->church?->name ?? self::$unassignedChurch)
+                    ->badge()
+                    ->color(fn($state) => $state === self::$unassignedChurch ? 'gray' : 'info'),
+
                 Tables\Columns\TextColumn::make('status')->label('Estado')->badge(),
             ])
             ->filters([
