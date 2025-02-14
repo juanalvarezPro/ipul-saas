@@ -33,7 +33,7 @@ class SocialAuthService
 
             return redirect('/app');
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Error al autenticar con Google');
+            return redirect('/app/login')->with('error', 'Error al autenticar con Google');
         }
     }
 }
