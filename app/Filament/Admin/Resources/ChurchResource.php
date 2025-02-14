@@ -105,8 +105,6 @@ class ChurchResource extends Resource
                             ->onlyCountries(['PA'])
                             ->focusNumberFormat(PhoneInputNumberType::E164)
                             ->regex('/^\+5076\d{7}$/', 'El número debe comenzar con +5076 y tener 8 dígitos en total')
-                            ->strictMode()
-                            ,
                     ]),
             ]);
     }
@@ -117,24 +115,30 @@ class ChurchResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->label('Iglesia')
+                    ->label('Iglesia')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('corregimiento.name') // Usamos 'corregimiento.name'
+                Tables\Columns\TextColumn::make('corregimiento.name') // Usamos 'corregimiento.name'
                     ->label('Corregimiento'),
-                    Tables\Columns\TextColumn::make('pastor_name') // Usamos 'corregimiento.name'
+                Tables\Columns\TextColumn::make('pastor_name') // Usamos 'corregimiento.name'
                     ->label('Pastor Actual'),
-                    PhoneColumn::make('phone')->label('Celular')->displayFormat(PhoneInputNumberType::E164),
-                    Tables\Columns\ToggleColumn::make('active')->label('Activo'),
+                PhoneColumn::make('phone')->label('Celular')->displayFormat(PhoneInputNumberType::E164),
+                Tables\Columns\ToggleColumn::make('active')->label('Activo'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                    // ...
                 ]),
             ]);
     }
@@ -153,5 +157,13 @@ class ChurchResource extends Resource
             'create' => Pages\CreateChurch::route('/create'),
             'edit' => Pages\EditChurch::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
