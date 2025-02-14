@@ -16,6 +16,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -33,6 +34,7 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationGroup = 'Gestión del Sistema';
     protected static ?string $unassignedChurch = 'Sin Asignar';
+    protected static ?string $pluralModelLabel = 'Feligreses';
 
     public static function form(Form $form): Form
     {
@@ -109,11 +111,37 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->form([
+                        Grid::make(2) // Se usa Grid en lugar de columns()
+                            ->schema([
+                                Select::make('status')
+                                    ->label('Estado')
+                                    ->options(userStatus::class)
+                                    ->default(userStatus::PENDING)
+                                    ->required(),
+
+                                Select::make('church_id')
+                                    ->label('Iglesia a la que se congrega')
+                                    ->relationship('church', 'name')
+                                    ->searchable()
+                                    ->optionsLimit(5)
+                                    ->preload()
+                                    ->required()
+                                    ->placeholder('Seleccione una iglesia'),
+                            ]),
+                    ]),
+
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                    // ...
                 ]),
             ]);
     }
@@ -130,7 +158,15 @@ class UserResource extends Resource
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            // 'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
