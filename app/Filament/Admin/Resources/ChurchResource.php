@@ -102,7 +102,10 @@ class ChurchResource extends Resource
                             ->label('Número de Celular')
                             ->defaultCountry('PA')
                             ->unique(ignoreRecord: true)
-                            ->onlyCountries(['PA']),
+                            ->onlyCountries(['PA'])
+                            ->focusNumberFormat(PhoneInputNumberType::E164)
+                            ->strictMode()
+                            ,
                     ]),
             ]);
     }
