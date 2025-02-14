@@ -129,6 +129,9 @@ class UserResource extends Resource
                                     ->preload()
                                     ->required()
                                     ->placeholder('Seleccione una iglesia'),
+                                Forms\Components\Select::make('roles')
+                                    ->relationship('roles', 'name')
+                                    ->preload(),
                             ]),
                     ]),
 
