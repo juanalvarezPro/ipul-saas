@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\LoginGoogle;
-use App\Http\Middleware\ApplyTenantScopes;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -57,7 +56,6 @@ class AppPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                ApplyTenantScopes::class
             ])
             ->authMiddleware([
                 Authenticate::class,
