@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Admin\Resources;
 
 use App\Enums\transactionStatus;
-use App\Filament\Resources\TransactionConceptsResource\Pages;
+use App\Filament\Admin\Resources\TransactionConceptsResource\Pages;
+use App\Filament\Admin\Resources\TransactionConceptsResource\RelationManagers;
 use App\Models\TransactionConcepts;
 use Filament\Forms;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 class TransactionConceptsResource extends Resource
@@ -20,7 +21,7 @@ class TransactionConceptsResource extends Resource
     protected static ?string $tenantOwnershipRelationshipName = 'workspace';
     protected static ?string $tenantRelationshipName = 'transactionConcepts';
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
-    protected static ?string $navigationLabel = 'Conceptos';
+    protected static ?string $navigationLabel = 'Conceptos Globales';
     protected static ?string $navigationGroup = 'Gestión del Sistema';
     protected static ?int $navigationSort = 1;
     protected static ?string $modelLabel = "Concepto";
@@ -34,24 +35,7 @@ class TransactionConceptsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name') ->label('Nombre')
-                ->required()
-                ->afterStateUpdated(function ($state, callable $set, $get) {
-                    // Verificar si el nombre coincide con un concepto global
-                    $existsGlobalConcept = TransactionConcepts::where('name', $state)
-                        ->where('is_global', true)
-                        ->exists();
-            
-                    if ($existsGlobalConcept) {
-                        // Limpiar el campo si el nombre es igual a un concepto global
-                        $set('name', ''); 
-                        Notification::make()
-                        ->title('Error')
-                        ->body('El nombre no puede ser igual a un concepto global.')
-                        ->danger()
-                        ->send();
-                    }
-                }),
+                Forms\Components\TextInput::make('name')->label('Nombre')->required()->unique(),
                 Forms\Components\TextInput::make('description')->label('Descripción'),
                 Forms\Components\Select::make('transaction_type')
                     ->label('Movimiento')

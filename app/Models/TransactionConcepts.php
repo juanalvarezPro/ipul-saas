@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\transactionStatus;
+use App\Models\Scopes\TransactionConceptScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -10,12 +11,16 @@ class TransactionConcepts extends Model
 {
     use SoftDeletes;
 
-    protected $fillable  = ['name', 'description', 'active', 'transaction_type', 'church_id', 'user_id'];
+    protected $fillable  = ['name', 'description', 'active', 'transaction_type', 'church_id', 'user_id', 'is_global'];
 
     protected $casts = [
         'transaction_type' => transactionStatus::class
     ];
-
+    // Aplica el scope globalmente a este modelo
+    protected static function booted()
+    {
+        static::addGlobalScope(new TransactionConceptScope);
+    }
     public function transactions()
     {
         return $this->hasMany(Transactions::class, 'concept_id');
