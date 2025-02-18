@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\SocialAuthService;
-use Laravel\Socialite\Facades\Socialite;
 
 class SocialLoginController extends Controller
 {
@@ -16,11 +15,11 @@ class SocialLoginController extends Controller
 
     public function redirectToProvider()
     {
-        return Socialite::driver('google')->redirect();
+        return $this->socialAuthService->handleRedirect();
     }
 
     public function socialCallback()
     {
-        return $this->socialAuthService->handleGoogleCallback();
+        return $this->socialAuthService->handleCallback();
     }
 }

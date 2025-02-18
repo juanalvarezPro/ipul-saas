@@ -2,37 +2,30 @@
 
 namespace App\Services;
 
-use App\Enums\userStatus;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Services\Contracts\SocialAuthProviderInterface;
+use App\Services\UserService;
 
 class SocialAuthService
 {
-    public function handleGoogleCallback()
+    protected $provider;
+    protected $userService;
+
+    public function __construct(SocialAuthProviderInterface $provider, UserService $userService)
+    {
+        $this->provider = $provider;
+        $this->userService = $userService;
+    }
+
+    public function handleRedirect() {
+        return $this->provider->redirect();
+    }
+
+    public function handleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
-
-            $user = User::firstOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                    'name' => $googleUser->getName(),
-                    'email_verified_at' => now(),
-                    'avatar' => $googleUser->getAvatar(),
-                    'password' => Hash::make($googleUser->getId()),
-                    'status' => userStatus::PENDING,
-                ]
-            );
-            if (($user->status != userStatus::APPROVED) || ($user->church_id === null)) {
-                Auth::logout();
-                return redirect('/pending-approval');
-            }
-
-            Auth::login($user);
-
-            return redirect('/app');
+            $socialUser = $this->provider->getUser();
+            $user = $this->userService->findOrCreateUser($socialUser);
+            return $this->userService->authenticateUser($user);
         } catch (\Exception $e) {
             return redirect('/app/login')->with('error', 'Error al autenticar con Google');
         }
