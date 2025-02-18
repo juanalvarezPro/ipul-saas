@@ -6,11 +6,13 @@ use Filament\Widgets\ChartWidget;
 use App\Models\Transactions;
 use App\Models\TransactionConcepts;
 use Carbon\Carbon;
-use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class OfferingChart extends ChartWidget
 {
+    use HasWidgetShield;
+    
     protected static ?string $heading = 'Comportamiento de Ofrendas';
 
     protected function getData(): array

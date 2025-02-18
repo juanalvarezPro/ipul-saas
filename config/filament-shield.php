@@ -72,7 +72,6 @@ return [
         ],
 
         'widgets' => [
-         'AppStatsOverview', 'OfferingChart'
         ],
 
         'resources' => [],

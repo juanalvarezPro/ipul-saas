@@ -6,11 +6,12 @@ use App\Enums\transactionStatus;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Transactions;
-use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class AppStatsOverview extends BaseWidget
-{
+{  protected ?string $heading = 'Movimientos';
+    use HasWidgetShield;
     protected function getStats(): array
     {
         $churchId = Auth::user()->church_id;
