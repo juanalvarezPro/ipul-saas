@@ -34,24 +34,9 @@ class TransactionConceptsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name') ->label('Nombre')
-                ->required()
-                ->afterStateUpdated(function ($state, callable $set, $get) {
-                    // Verificar si el nombre coincide con un concepto global
-                    $existsGlobalConcept = TransactionConcepts::where('name', $state)
-                        ->where('is_global', true)
-                        ->exists();
-            
-                    if ($existsGlobalConcept) {
-                        // Limpiar el campo si el nombre es igual a un concepto global
-                        $set('name', ''); 
-                        Notification::make()
-                        ->title('Error')
-                        ->body('El nombre no puede ser igual a un concepto global.')
-                        ->danger()
-                        ->send();
-                    }
-                }),
+                Forms\Components\TextInput::make('name')->label('Nombre')
+                    ->required()
+                    ->afterStateUpdated(fn($state, callable $set) => self::validateUniqueConcept($state, $set)),
                 Forms\Components\TextInput::make('description')->label('Descripción'),
                 Forms\Components\Select::make('transaction_type')
                     ->label('Movimiento')
@@ -94,6 +79,30 @@ class TransactionConceptsResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    /**
+     * Valida si el nombre ingresado ya existe como concepto global.
+     */
+    private static function validateUniqueConcept($state, callable $set): void
+    {
+        $state = trim(strtolower($state)); // Convertir a minúsculas y eliminar espacios
+        $set('name', $state); // Actualizar el estado del input
+
+        // Verificar si ya existe como concepto global
+        $existsGlobalConcept = TransactionConcepts::where('name', $state)
+            ->where('is_global', true)
+            ->exists();
+
+        if ($existsGlobalConcept) {
+            $set('name', ''); // Limpiar el campo
+
+            Notification::make()
+                ->title('Error')
+                ->body('El nombre no puede ser igual a un concepto global.')
+                ->danger()
+                ->send();
+        }
     }
 
     public static function getRelations(): array

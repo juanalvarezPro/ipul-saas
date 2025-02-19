@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\transactionStatus;
 use App\Models\Scopes\TransactionConceptScope;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -29,5 +30,12 @@ class TransactionConcepts extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string $value) => strtolower($value),
+        );
     }
 }
