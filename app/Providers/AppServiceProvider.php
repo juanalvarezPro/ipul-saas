@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\Contracts\SocialAuthProviderInterface;
 use App\Services\GoogleAuthService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
-    //  URL::forceScheme('https');
+     URL::forceScheme('https');
 
   }
 }
