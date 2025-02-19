@@ -24,7 +24,7 @@ return new class extends Migration
             $table->softDeletes();
     
             // Relaciones
-            $table->foreign('concept_id')->references('id')->on('transaction_concepts')->onDelete('cascade');
+            $table->foreign('concept_id')->references('id')->on('transaction_concepts')->onDelete('restrict');
             $table->foreign('church_id')->references('id')->on('churches')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
         });
