@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Constants\OfferingConcept;
 use Filament\Widgets\ChartWidget;
 use App\Models\Transactions;
 use App\Models\TransactionConcepts;
@@ -33,16 +34,18 @@ class OfferingChart extends ChartWidget
     protected function getOfferingConcepts()
     {
         return TransactionConcepts::whereIn('name', [
-            'Ofrenda Martes',
-            'Ofrenda Jueves',
-            'Ofrenda Sábado',
-            'Ofrenda Domingo'
+            OfferingConcept::OFRENDA_MARTES,
+            OfferingConcept::OFRENDA_JUEVES,
+            OfferingConcept::OFRENDA_SABADO,
+            OfferingConcept::OFRENDA_DOMINGO
         ])->get();
     }
 
     protected function getMonthLabels(): array
     {
-        return ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        return collect(range(1, 12))
+            ->map(fn($month) => ucfirst(Carbon::create()->month($month)->locale('es')->shortMonthName))
+            ->toArray();
     }
 
     protected function generateDatasets($concepts, $churchId): array
@@ -86,15 +89,7 @@ class OfferingChart extends ChartWidget
 
     protected function getColorForConcept(string $conceptName, float $opacity = 1): string
     {
-        $colors = [
-            'Ofrenda Martes' => 'rgb(75, 192, 192)',
-            'Ofrenda Jueves' => 'rgb(255, 159, 64)',
-            'Ofrenda Sábado' => 'rgb(17, 100, 236)',
-            'Ofrenda Dominical' => 'rgb(255, 99, 132)',
-        ];
-
-        $color = $colors[$conceptName] ?? 'rgb(0, 0, 0)';
-        return $opacity === 1 ? $color : str_replace(')', ", {$opacity})", $color . ')');
+      return OfferingConcept::getColor($conceptName, $opacity);
     }
 
     protected function getType(): string

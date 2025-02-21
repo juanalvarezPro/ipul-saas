@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Enums\OfferingConcept;
+use App\Constants\OfferingConcept;
 use App\Enums\transactionStatus;
 use App\Models\TransactionConcepts;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TransactionConceptsSeeder extends Seeder
@@ -15,12 +14,19 @@ class TransactionConceptsSeeder extends Seeder
      */
     public function run(): void
     {
-        $Offerings = OfferingConcept::cases();
-        foreach ($Offerings as $Offering) {
+        // Insertar los conceptos de ofrenda
+        $concepts = [
+            OfferingConcept::OFRENDA_MARTES,
+            OfferingConcept::OFRENDA_JUEVES,
+            OfferingConcept::OFRENDA_SABADO,
+            OfferingConcept::OFRENDA_DOMINGO,
+        ];
+
+        foreach ($concepts as $concept) {
             TransactionConcepts::updateOrCreate(
-                ['name' => $Offering->value],
+                ['name' => $concept],
                 [
-                    'description' => 'Concepto de ' . ucfirst($Offering->value),
+                    'description' => 'Concepto de ' . ucfirst(str_replace('ofrenda ', '', $concept)),
                     'active' => true,
                     'is_global' => true,
                     'transaction_type' => transactionStatus::INCOME,
