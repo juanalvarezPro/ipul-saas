@@ -33,9 +33,12 @@ class OfferingChart extends ChartWidget
 
     protected function getOfferingConcepts()
     {
-        // Obtener todos los valores del enum de manera dinámica
-        $offeringConceptValues = OfferingConcept::cases();
-        $offeringConceptValues = array_map(fn($concept) => $concept->value, $offeringConceptValues);
+        $offeringConceptValues = [
+            OfferingConcept::OFRENDA_MARTES->value,
+            OfferingConcept::OFRENDA_JUEVES->value,
+            OfferingConcept::OFRENDA_SABADO->value,
+            OfferingConcept::OFRENDA_DOMINGO->value,
+        ];
 
         // Realizar la consulta usando el array generado dinámicamente
         return TransactionConcepts::whereIn('name', $offeringConceptValues)->get();
