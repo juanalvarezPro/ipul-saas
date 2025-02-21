@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\OfferingConcept;
 use Filament\Widgets\ChartWidget;
 use App\Models\Transactions;
 use App\Models\TransactionConcepts;
@@ -13,11 +12,11 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 class OfferingChart extends ChartWidget
 {
     use HasWidgetShield;
-
+    
     protected static ?string $heading = 'Comportamiento de Ofrendas';
 
     protected function getData(): array
-    {
+    { 
         $concepts = $this->getOfferingConcepts();
         $churchId = Auth::user()->church_id;
 
@@ -33,19 +32,12 @@ class OfferingChart extends ChartWidget
 
     protected function getOfferingConcepts()
     {
-        return TransactionConcepts::whereIn('name', [
-            'ofrenda martes',
-            'ofrenda jueves',
-            'ofrenda sábado',
-            'ofrenda domingo'
-        ])->get();
+        return TransactionConcepts::whereIn('name', array_column(OfferingConcept::cases(), 'value'))->get();
     }
 
     protected function getMonthLabels(): array
     {
-        return collect(range(1, 12))
-            ->map(fn($month) => ucfirst(Carbon::create()->month($month)->locale('es')->shortMonthName))
-            ->toArray();
+        return ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     }
 
     protected function generateDatasets($concepts, $churchId): array
@@ -55,17 +47,17 @@ class OfferingChart extends ChartWidget
         foreach ($concepts as $concept) {
             $transactions = $this->getTransactionsByConcept($concept, $churchId);
             $monthlyData = $this->calculateMonthlyTotals($transactions);
-
+            
             $datasets[] = [
                 'label' => $concept->name,
                 'data' => $monthlyData,
-                'borderColor' => $this->getColorForConcept($concept),
-                'backgroundColor' => $this->getColorForConcept($concept, 0.2),
+                'borderColor' => $this->getColorForConcept($concept->name),
+                'backgroundColor' => $this->getColorForConcept($concept->name, 0.2),
                 'fill' => true,
                 'tension' => 0.4,
             ];
         }
-
+        
         return $datasets;
     }
 
@@ -86,15 +78,17 @@ class OfferingChart extends ChartWidget
         }
         return $monthlyData;
     }
-    protected function getColorForConcept(TransactionConcepts $concept, float $opacity = 1): string
+
+    protected function getColorForConcept(string $conceptName, float $opacity = 1): string
     {
-        $colors = OfferingConcept::color();
+        $colors = [
+            'Ofrenda Martes' => 'rgb(75, 192, 192)',
+            'Ofrenda Jueves' => 'rgb(255, 159, 64)',
+            'Ofrenda Sábado' => 'rgb(17, 100, 236)',
+            'Ofrenda Dominical' => 'rgb(255, 99, 132)',
+        ];
 
-        // Verifica si el concepto está en el enum OfferingConcept
-        $conceptEnum = OfferingConcept::tryFrom($concept->name);
-
-        $color = $colors[$conceptEnum->value] ?? 'rgb(0, 0, 0)';
-
+        $color = $colors[$conceptName] ?? 'rgb(0, 0, 0)';
         return $opacity === 1 ? $color : str_replace(')', ", {$opacity})", $color . ')');
     }
 
