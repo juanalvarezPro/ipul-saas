@@ -33,15 +33,12 @@ class OfferingChart extends ChartWidget
 
     protected function getOfferingConcepts()
     {
-        $offeringConceptValues = [
-            OfferingConcept::OFRENDA_MARTES->value,
-            OfferingConcept::OFRENDA_JUEVES->value,
-            OfferingConcept::OFRENDA_SABADO->value,
-            OfferingConcept::OFRENDA_DOMINGO->value,
-        ];
-
-        // Realizar la consulta usando el array generado dinámicamente
-        return TransactionConcepts::whereIn('name', $offeringConceptValues)->get();
+        return TransactionConcepts::whereIn('name', [
+            'ofrenda martes',
+            'ofrenda jueves',
+            'ofrenda sábado',
+            'ofrenda domingo'
+        ])->get();
     }
 
     protected function getMonthLabels(): array
