@@ -33,7 +33,12 @@ class OfferingChart extends ChartWidget
 
     protected function getOfferingConcepts()
     {
-        return TransactionConcepts::whereIn('name', array_column(OfferingConcept::cases(), 'value'))->get();
+        // Obtener todos los valores del enum de manera dinámica
+        $offeringConceptValues = OfferingConcept::cases();
+        $offeringConceptValues = array_map(fn($concept) => $concept->value, $offeringConceptValues);
+
+        // Realizar la consulta usando el array generado dinámicamente
+        return TransactionConcepts::whereIn('name', $offeringConceptValues)->get();
     }
 
     protected function getMonthLabels(): array
