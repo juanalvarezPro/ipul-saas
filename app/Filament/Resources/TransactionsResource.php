@@ -54,6 +54,7 @@ class TransactionsResource extends Resource
                     ->openable()
                     ->multiple()
                     ->disk('r2')
+                    ->visibility('public')
                     ->directory('transactions-attachments')
                     ->previewable()
                     ->downloadable()
