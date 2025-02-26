@@ -34,12 +34,18 @@ class AppStatsOverview extends BaseWidget
                 ->description('Suma total de ingresos')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
-                ->color('success'),
+                ->color('success')
+                ->extraAttributes([
+                    'class' => 'hidden md:block',
+                ]),
 
             Stat::make('Total Egresos', number_format($totalEgresos, 2) . ' PAB')
                 ->description('Suma total de egresos')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
-                ->color('danger'),
+                ->color('danger')
+                ->extraAttributes([
+                    'class' => 'hidden md:block',
+                ]),
 
             Stat::make('Saldo Disponible', number_format($saldo, 2) . ' PAB')
                 ->description('Diferencia entre ingresos y egresos')
