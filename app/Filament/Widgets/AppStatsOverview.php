@@ -8,16 +8,25 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Transactions;
 use Illuminate\Support\Facades\Auth;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class AppStatsOverview extends BaseWidget
-{  protected ?string $heading = 'Movimientos';
-    use HasWidgetShield;
+{
+    use HasWidgetShield, InteractsWithPageFilters;
+
+    protected ?string $heading = 'Movimientos';
+
     protected function getStats(): array
     {
         $churchId = Auth::user()->church_id;
-        
-        $totalIngresos = $this->getTotalIncomes($churchId);
-        $totalEgresos = $this->getTotalExpenses($churchId);
+
+        // Obtener los filtros de fecha si están presentes
+        $startDate = $this->filters['startDate'] ?? null;
+        $endDate = $this->filters['endDate'] ?? null;
+
+        // Obtener los totales con los filtros aplicados
+        $totalIngresos = $this->getTotalIncomes($churchId, $startDate, $endDate);
+        $totalEgresos = $this->getTotalExpenses($churchId, $startDate, $endDate);
         $saldo = $totalIngresos - $totalEgresos;
 
         return [
@@ -39,21 +48,39 @@ class AppStatsOverview extends BaseWidget
         ];
     }
 
-    private function getTotalIncomes(int $churchId): float
+    private function getTotalIncomes(int $churchId, ?string $startDate, ?string $endDate): float
     {
-        return Transactions::whereHas('transactionConcept', function ($query) {
-                $query->where('transaction_type', TransactionStatus::INCOME);
-            })
-            ->where('church_id', $churchId)
-            ->sum('amount');
+        $query = Transactions::whereHas('transactionConcept', function ($query) {
+            $query->where('transaction_type', TransactionStatus::INCOME);
+        })
+            ->where('church_id', $churchId);
+
+        // Filtrar por fechas si están presentes
+        if ($startDate) {
+            $query->where('transaction_date', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('transaction_date', '<=', $endDate);
+        }
+
+        return $query->sum('amount');
     }
 
-    private function getTotalExpenses(int $churchId): float
+    private function getTotalExpenses(int $churchId, ?string $startDate, ?string $endDate): float
     {
-        return Transactions::whereHas('transactionConcept', function ($query) {
-                $query->where('transaction_type', TransactionStatus::EXPENSE);
-            })
-            ->where('church_id', $churchId)
-            ->sum('amount');
+        $query = Transactions::whereHas('transactionConcept', function ($query) {
+            $query->where('transaction_type', TransactionStatus::EXPENSE);
+        })
+            ->where('church_id', $churchId);
+
+        // Filtrar por fechas si están presentes
+        if ($startDate) {
+            $query->where('transaction_date', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('transaction_date', '<=', $endDate);
+        }
+
+        return $query->sum('amount');
     }
 }
