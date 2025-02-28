@@ -38,7 +38,7 @@ class TableTransactionConcept
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->disabled(fn($record) => $record->user_id !== Auth::id()),
+                    ->visible(fn($record) => $record->user_id !== Auth::id()),
                 Tables\Actions\DeleteAction::make()
                     ->visible(fn($record) => $record->user_id === Auth::id()),
             ])
