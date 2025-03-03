@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 abstract class BaseTransaction extends Resource
@@ -34,8 +35,12 @@ abstract class BaseTransaction extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('church_id', Auth::user()->church_id);
+        return parent::getEloquentQuery()->where('church_id', Auth::user()->church_id)->withoutGlobalScopes([
+            SoftDeletingScope::class,
+        ]);
     }
+
+
 
     public static function form(Form $form): Form
     {
