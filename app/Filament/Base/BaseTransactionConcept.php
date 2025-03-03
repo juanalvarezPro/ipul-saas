@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Filament\Components\TransactionConcept\FormTransactionConcept;
 use App\Filament\Components\TransactionConcept\SearchTransactionConcept;
 use App\Filament\Components\TransactionConcept\TableTransactionConcept;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 
@@ -34,7 +35,9 @@ abstract class BaseTransactionConcept extends Resource
     }
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('church_id', Auth::user()->church_id);
+        return parent::getEloquentQuery()->where('church_id', Auth::user()->church_id)->withoutGlobalScopes([
+            SoftDeletingScope::class,
+        ]);
     }
 
 
