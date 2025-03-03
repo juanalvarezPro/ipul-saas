@@ -66,16 +66,16 @@ class Transactions extends Model
 
     public function church()
     {
-        return $this->belongsTo(Church::class, 'church_id');
+        return $this->belongsTo(Church::class, 'church_id')->withTrashed();
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     public function transactionConcept()
     {
-        return $this->belongsTo(TransactionConcepts::class, 'concept_id');  // 'concept_id' es la clave foránea en 'transactions'
+        return $this->belongsTo(TransactionConcepts::class, 'concept_id')->withTrashed();  // 'concept_id' es la clave foránea en 'transactions'
     }
 }

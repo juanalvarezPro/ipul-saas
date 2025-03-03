@@ -66,10 +66,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function transactions () {
         return $this->hasMany(Transactions::class, 'concept_id');
     }
-    public function transactionConcept () {
-        return $this->hasMany(Transactions::class, 'concept_id');
-    }
 
+    public function transactionConcepts()
+    {
+        return $this->hasMany(TransactionConcepts::class, 'user_id');
+    }
+    
 
     public function getFilamentAvatarUrl(): ?string
     {
