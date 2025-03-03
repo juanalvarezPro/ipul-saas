@@ -33,12 +33,14 @@ class OfferingChart extends ChartWidget
 
     protected function getOfferingConcepts()
     {
-        return TransactionConcepts::whereIn('name', [
-            OfferingConcept::OFRENDA_MARTES,
-            OfferingConcept::OFRENDA_JUEVES,
-            OfferingConcept::OFRENDA_SABADO,
-            OfferingConcept::OFRENDA_DOMINGO
-        ])->get();
+        return cache()->remember('offering_concepts', now()->addHours(6), function () {
+            return TransactionConcepts::whereIn('name', [
+                OfferingConcept::OFRENDA_MARTES,
+                OfferingConcept::OFRENDA_JUEVES,
+                OfferingConcept::OFRENDA_SABADO,
+                OfferingConcept::OFRENDA_DOMINGO
+            ])->get();
+        });
     }
 
     protected function getMonthLabels(): array
@@ -51,10 +53,16 @@ class OfferingChart extends ChartWidget
     protected function generateDatasets($concepts, $churchId): array
     {
         $datasets = [];
+        $transactions = $this->getTransactionsByConcepts($concepts, $churchId);
 
         foreach ($concepts as $concept) {
-            $transactions = $this->getTransactionsByConcept($concept, $churchId);
-            $monthlyData = $this->calculateMonthlyTotals($transactions);
+            $monthlyData = array_fill(0, 12, 0);
+
+            foreach ($transactions as $transaction) {
+                if ($transaction->concept_id === $concept->id) {
+                    $monthlyData[$transaction->month - 1] = $transaction->total;
+                }
+            }
             
             $datasets[] = [
                 'label' => $concept->name,
@@ -69,22 +77,15 @@ class OfferingChart extends ChartWidget
         return $datasets;
     }
 
-    protected function getTransactionsByConcept($concept, $churchId)
+    protected function getTransactionsByConcepts($concepts, $churchId)
     {
-        return Transactions::where('concept_id', $concept->id)
+        return Transactions::whereIn('concept_id', $concepts->pluck('id'))
             ->where('church_id', $churchId)
             ->whereYear('transaction_date', Carbon::now()->year)
+            ->whereNull('deleted_at')
+            ->selectRaw('concept_id, EXTRACT(MONTH FROM transaction_date) as month, SUM(amount) as total')
+            ->groupBy('concept_id', 'month')
             ->get();
-    }
-
-    protected function calculateMonthlyTotals($transactions): array
-    {
-        $monthlyData = array_fill(0, 12, 0);
-        foreach ($transactions as $transaction) {
-            $month = Carbon::parse($transaction->transaction_date)->month - 1;
-            $monthlyData[$month] += $transaction->amount;
-        }
-        return $monthlyData;
     }
 
     protected function getColorForConcept(string $conceptName, float $opacity = 1): string
