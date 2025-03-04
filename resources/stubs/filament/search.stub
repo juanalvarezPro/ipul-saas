@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Filament\Components\{Model};
+
+class Search{Model}
+{
+    public static function searchableAttributes(): array
+    {
+        return ['name'];
+    }
+
+    public static function searchResultDetails($record): array
+    {
+        return [
+            'Nombre' => $record->name,
+        ];
+    }
+}

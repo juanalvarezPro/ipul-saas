@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Filament\Components\{Model};
+
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+
+class Form{Model}
+{
+    public static function make(Form $form): Form
+    {
+        return $form
+            ->schema([
+                TextInput::make('name')
+                    ->label('Nombre')
+                    ->required()
+                    ->maxLength(20),
+            ]);
+    }
+}
