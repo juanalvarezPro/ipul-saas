@@ -7,7 +7,7 @@ class SearchChurch
 
     public static function searchableAttributes(): array
     {
-        return ['name'];
+        return ['name', 'pastor_name'];
     }
 
     public static function searchResultDetails($record): array
