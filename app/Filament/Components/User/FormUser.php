@@ -9,7 +9,7 @@ use Filament\Forms\Form;
 
 class FormUser {
 
-    public static function make(Form $form, $model): Form
+    public static function make(Form $form): Form
     {
         return $form
         ->schema(
