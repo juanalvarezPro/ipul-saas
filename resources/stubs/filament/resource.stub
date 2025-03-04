@@ -2,7 +2,7 @@
 
 namespace {namespace}\Resources;
 
-use {namespace}\Base\Base{Model};
+use App\Filament\Base\Base{Model};
 use {namespace}\Resources\{Model}Resource\Pages;
 
 class {Model}Resource extends Base{Model}

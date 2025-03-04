@@ -6,16 +6,28 @@ use App\Filament\Components\{Model}\Form{Model};
 use App\Filament\Components\{Model}\Search{Model};
 use App\Filament\Components\{Model}\Table{Model};
 use App\Models\{Model};
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 abstract class Base{Model} extends BaseResource
 {
     protected static ?string $model = {Model}::class;
     // protected static ?string $navigationLabel = 'Labels';
     // protected static ?string $modelLabel = "Label";
+    // protected static ?string $pluralModelLabel = 'Labels';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     // protected static ?string $navigationGroup = 'Gestión del Sistema';
 
     protected static $formComponent = Form{Model}::class;
     protected static $tableComponent = Table{Model}::class;
     protected static $searchComponent = Search{Model}::class;
+
+
+public static function getEloquentQuery(): Builder
+    {
+        return static::$model::query()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
 }
