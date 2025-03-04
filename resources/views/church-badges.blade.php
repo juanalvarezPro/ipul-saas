@@ -17,7 +17,7 @@
 
 <!-- Mostrar el saldo -->
 <x-filament::badge :color="$color">
-    <span>Saldo: {{ $formattedSaldo }}</span>
+    <span>{{$formattedSaldo}}</span>
 </x-filament::badge>
 
 <!-- Mostrar el nombre de la iglesia -->
