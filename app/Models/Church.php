@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Church extends Model
 {
@@ -40,5 +41,13 @@ class Church extends Model
     public function transactions()
     {
         return $this->hasMany(Transactions::class);
+    }
+
+    // Método para obtener el resumen de la iglesia
+    public function getSummary()
+    {
+        return DB::table('vw_church_transaction_summary')
+            ->where('church_id', $this->id)
+            ->first();
     }
 }
