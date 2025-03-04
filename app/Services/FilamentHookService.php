@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use Filament\Support\Facades\FilamentView;
@@ -8,9 +9,10 @@ class FilamentHookService
 {
     public static function register(): void
     {
+
         FilamentView::registerRenderHook(
             'panels::global-search.before',
-            fn (): View => view('components.church-badge'),
+            fn(): View => view('church-badges'),
         );
     }
 }
