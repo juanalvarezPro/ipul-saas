@@ -13,7 +13,7 @@ use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 
 class FormChurch {
-    protected static int $idPanama = 170; //ID TABLE COUNTRIES
+    protected static int $IDPANAMA = 170; //ID TABLE COUNTRIES
 
     public static function make(Form $form): Form
     {
