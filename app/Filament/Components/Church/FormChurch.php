@@ -38,7 +38,7 @@ class FormChurch {
                         Forms\Components\Select::make('country_id')
                             ->relationship('country', 'name')
                             ->label('País')
-                            ->default(self::$idPanama)
+                            ->default(self::$IDPANAMA)
                             ->afterStateUpdated(function (Set $set) {
                                 $set('state_id', null);
                                 $set('city_id', null);
