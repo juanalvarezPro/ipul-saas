@@ -17,6 +17,6 @@ class TransactionConceptScope implements Scope
         $builder->where(function($query) {
             $query->where('church_id', Auth::user()->church_id)  // Filtrar por la iglesia
                   ->orWhere('is_global', true);   // Incluir conceptos globales
-        });
+        })->where('active', true);
     }
 }
