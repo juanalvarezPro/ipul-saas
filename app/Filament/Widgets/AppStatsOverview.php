@@ -22,7 +22,7 @@ class AppStatsOverview extends BaseWidget
         $churchSummary = $church->getSummary();
 
         return [
-            Stat::make('Total Ingresos', number_format($churchSummary->total_income, 2) . ' PAB')
+            Stat::make('Total Ingresos', number_format($churchSummary->total_income ?? 0, 2) . ' PAB')
                 ->description('Suma total de ingresos')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->chart([7, 2, 10, 3, 15, 4, 17])
@@ -31,7 +31,7 @@ class AppStatsOverview extends BaseWidget
                     'class' => 'hidden md:block',
                 ]),
 
-            Stat::make('Total Egresos', number_format($churchSummary->total_expense, 2) . ' PAB')
+            Stat::make('Total Egresos', number_format($churchSummary->total_expense ?? 0, 2) . ' PAB')
                 ->description('Suma total de egresos')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger')
@@ -39,7 +39,7 @@ class AppStatsOverview extends BaseWidget
                     'class' => 'hidden md:block',
                 ]),
 
-            Stat::make('Saldo Disponible', number_format($churchSummary->saldo, 2) . ' PAB')
+            Stat::make('Saldo Disponible', number_format($churchSummary->saldo ?? 0, 2) . ' PAB')
                 ->description('Diferencia entre ingresos y egresos')
                 ->descriptionIcon($churchSummary->saldo >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($churchSummary->saldo >= 0 ? 'success' : 'danger'),
