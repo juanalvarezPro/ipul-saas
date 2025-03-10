@@ -19,7 +19,12 @@ class AppStatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $church = Church::find(Auth::user()->church_id);
-        $churchSummary = $church->getSummary();
+        if (!$church) {
+            return [];
+        }
+
+        $churchSummary = $church->getSummary() ?? (object) ['total_income' => 0, 'total_expense' => 0, 'saldo' => 0];
+
 
         return [
             Stat::make('Total Ingresos', number_format($churchSummary->total_income ?? 0, 2) . ' PAB')
