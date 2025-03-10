@@ -8,6 +8,7 @@ use App\Filament\Components\TransactionConcept\FormTransactionConcept;
 use App\Filament\Components\TransactionConcept\SearchTransactionConcept;
 use App\Filament\Components\TransactionConcept\TableTransactionConcept;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 abstract class BaseTransactionConcept extends BaseResource
@@ -27,6 +28,9 @@ abstract class BaseTransactionConcept extends BaseResource
     {
         return static::$model::query()
         ->where('church_id', Auth::user()->church_id)
-        ->where('is_global', false );
+        ->where('is_global', false )
+        ->withoutGlobalScopes([
+            SoftDeletingScope::class,
+        ]);
     }
 }
