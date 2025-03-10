@@ -6,7 +6,7 @@ class OfferingConcept
 {
     public const OFRENDA_MARTES = 'ofrenda martes';
     public const OFRENDA_JUEVES = 'ofrenda jueves';
-    public const OFRENDA_SABADO = 'ofrenda sábado';
+    public const OFRENDA_SABADO = 'ofrenda sabado';
     public const OFRENDA_DOMINGO = 'ofrenda domingo';
 
     // Método para obtener el color asociado a cada concepto
