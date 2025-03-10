@@ -6,7 +6,7 @@
 
     // Obtener el resumen de la iglesia
     $churchSummary = $church->getSummary();
-    $saldo = $churchSummary->saldo;
+    $saldo = $churchSummary->saldo ?? 0;
     $color = $saldo < 0 ? 'danger' : 'success';
     $formattedSaldo = number_format($saldo, 2) . ' PAB';
 
