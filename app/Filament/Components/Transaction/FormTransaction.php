@@ -2,6 +2,7 @@
 
 namespace App\Filament\Components\Transaction;
 
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms;
 use Filament\Forms\Form;
 
@@ -16,7 +17,7 @@ class FormTransaction
                     ->numeric()
                     ->required(),
                 Forms\Components\Select::make('concept_id')
-                    ->relationship('transactionConcept', 'name')
+                    ->relationship('transactionConcept', 'name', fn(Builder $query) => $query->where('active', true))
                     ->label('Concepto')
                     ->searchable()
                     ->preload()
