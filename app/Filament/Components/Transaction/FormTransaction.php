@@ -2,6 +2,7 @@
 
 namespace App\Filament\Components\Transaction;
 
+use App\Filament\Components\TransactionConcept\FormTransactionConcept;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,7 +21,17 @@ class FormTransaction
                     ->relationship('transactionConcept', 'name', fn(Builder $query) => $query->where('active', true))
                     ->label('Concepto')
                     ->searchable()
-                    ->preload()
+                    ->getSearchResultsUsing(fn(string $search): array => FormTransactionConcept::searchTransactionConcepts($search))
+                    ->getOptionLabelUsing(fn($value): ?string => FormTransactionConcept::getTransactionConceptLabel($value))
+                    ->createOptionForm([
+                        FormTransactionConcept::nameField(),
+                        FormTransactionConcept::parentSelect(),
+                        FormTransactionConcept::transactionTypeSelect(),
+                    ])
+                    ->createOptionUsing(function (array $data): int {
+
+                        return FormTransactionConcept::createTransactionConcept($data);
+                    })
                     ->required(),
                 Forms\Components\DatePicker::make('transaction_date')
                     ->label('Fecha del Movimiento')

@@ -46,7 +46,7 @@ class FormTransactionConcept
             ->relationship('parent', 'name', fn(Builder $query) => $query->where('is_global', true))
             ->label('Concepto Padre')
             ->afterStateUpdated(fn(Set $set, ?string $state) =>
-                $set('transaction_type', TransactionConcepts::find($state)->transaction_type))
+            $set('transaction_type', TransactionConcepts::find($state)->transaction_type))
             ->searchable()
             ->live()
             ->preload()
@@ -69,5 +69,37 @@ class FormTransactionConcept
     {
         return Forms\Components\TextInput::make('description')
             ->label('Descripción');
+    }
+
+    public static function searchTransactionConcepts(string $search): array
+    {
+        return TransactionConcepts::whereRaw(
+            "unaccent(lower(name)) ILIKE unaccent(lower(?))",
+            ["%{$search}%"]
+        )
+            ->limit(5)
+            ->pluck('name', 'id')
+            ->toArray();
+    }
+
+    public static function getTransactionConceptLabel($value): ?string
+    {
+        return TransactionConcepts::find($value)?->name;
+    }
+
+    /**
+     * Crear un nuevo TransactionConcept y devolver su ID.
+     *
+     * @param array $data
+     * @return int
+     */
+    public static function createTransactionConcept(array $data): int
+    {
+        // Agregar el user_id y church_id al $data
+        $data['church_id'] = Auth::user()->church_id;
+        $data['user_id'] = Auth::user()->id;
+
+        // Crear el nuevo TransactionConcept con los datos proporcionados
+        return TransactionConcepts::create($data)->getKey();
     }
 }
