@@ -43,7 +43,7 @@ class FormTransactionConcept
     public static function parentSelect(): Forms\Components\Select
     {
         return Forms\Components\Select::make('parent_id')
-            ->relationship('parent', 'name', fn(Builder $query) => $query->where('is_global', true))
+            ->relationship('parent', 'name', fn(Builder $query) => $query->where('is_global', true)->Where('active', true))
             ->label('Concepto Padre')
             ->afterStateUpdated(fn(Set $set, ?string $state) =>
             $set('transaction_type', TransactionConcepts::find($state)->transaction_type))
