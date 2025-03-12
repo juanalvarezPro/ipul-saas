@@ -5,6 +5,7 @@ namespace App\Filament\Components\Transaction;
 use App\Filament\Components\TransactionConcept\FormTransactionConcept;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms;
+use Illuminate\Support\Str;
 use Filament\Forms\Form;
 
 class FormTransaction
@@ -46,7 +47,7 @@ class FormTransaction
                     ->multiple()
                     ->disk('r2')
                     ->visibility('private')
-                    ->directory('transactions-attachments')
+                    ->directory(fn() => 'transactions-attachments/' . Str::slug(auth()->user()->church->name ?? 'default'))
                     ->previewable()
                     ->downloadable()
                     ->columnSpanFull(),
