@@ -43,7 +43,7 @@ class FormTransactionConcept
     public static function parentSelect(): Forms\Components\Select
     {
         return Forms\Components\Select::make('parent_id')
-            ->relationship('parent', 'name', fn(Builder $query) => $query->where('is_global', true)->Where('active', true))
+            ->relationship('parent', 'name', fn(Builder $query) => $query->where('is_global', true))
             ->label('Concepto Padre')
             ->afterStateUpdated(fn(Set $set, ?string $state) =>
             $set('transaction_type', TransactionConcepts::find($state)->transaction_type))
@@ -71,21 +71,21 @@ class FormTransactionConcept
             ->label('Descripción');
     }
 
-    public static function searchTransactionConcepts(string $search): array
-    {
-        return TransactionConcepts::whereRaw(
-            "unaccent(lower(name)) ILIKE unaccent(lower(?))",
-            ["%{$search}%"]
-        )
-            ->limit(5)
-            ->pluck('name', 'id')
-            ->toArray();
-    }
+    // public static function searchTransactionConcepts(string $search): array
+    // {
+    //     return TransactionConcepts::whereRaw(
+    //         "unaccent(lower(name)) ILIKE unaccent(lower(?))",
+    //         ["%{$search}%"]
+    //     )
+    //         ->limit(5)
+    //         ->pluck('name', 'id')
+    //         ->toArray();
+    // }
 
-    public static function getTransactionConceptLabel($value): ?string
-    {
-        return TransactionConcepts::find($value)?->name;
-    }
+    // public static function getTransactionConceptLabel($value): ?string
+    // {
+    //     return TransactionConcepts::find($value)?->name;
+    // }
 
     /**
      * Crear un nuevo TransactionConcept y devolver su ID.

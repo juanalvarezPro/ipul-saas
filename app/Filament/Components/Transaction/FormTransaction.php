@@ -22,8 +22,8 @@ class FormTransaction
                     ->relationship('transactionConcept', 'name', fn(Builder $query) => $query->where('active', true))
                     ->label('Concepto')
                     ->searchable()
-                    ->getSearchResultsUsing(fn(string $search): array => FormTransactionConcept::searchTransactionConcepts($search))
-                    ->getOptionLabelUsing(fn($value): ?string => FormTransactionConcept::getTransactionConceptLabel($value))
+                    // ->getSearchResultsUsing(fn(string $search): array => FormTransactionConcept::searchTransactionConcepts($search))
+                    // ->getOptionLabelUsing(fn($value): ?string => FormTransactionConcept::getTransactionConceptLabel($value))
                     ->createOptionForm([
                         FormTransactionConcept::nameField(),
                         FormTransactionConcept::parentSelect(),
