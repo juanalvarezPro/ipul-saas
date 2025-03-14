@@ -38,6 +38,7 @@ class FormTransaction
                     DateRangePicker::make('transaction_date')
                     ->label('Fecha del Movimiento')
                     ->defaultToday()
+                    ->displayFormat('YYYY-MM-DD')
                     ->singleCalendar()
                     ->useRangeLabels()
                     ->timezone(env('APP_TIMEZONE', 'America/Panama'))
