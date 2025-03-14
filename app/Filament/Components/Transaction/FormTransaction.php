@@ -40,6 +40,8 @@ class FormTransaction
                     ->defaultToday()
                     ->displayFormat('YYYY-MM-DD')
                     ->singleCalendar()
+                    ->disableRanges()
+                    ->autoApply()
                     ->useRangeLabels()
                     ->timezone(env('APP_TIMEZONE', 'America/Panama'))
                     ->required(),
