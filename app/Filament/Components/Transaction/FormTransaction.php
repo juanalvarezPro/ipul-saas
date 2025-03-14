@@ -37,7 +37,6 @@ class FormTransaction
                     ->required(),
                     DateRangePicker::make('transaction_date')
                     ->label('Fecha del Movimiento')
-                    ->defaultToday()
                     ->displayFormat('YYYY-MM-DD')
                     ->singleCalendar()
                     ->disableRanges()
