@@ -16,6 +16,7 @@
         "league/flysystem-aws-s3-v3": "3.0",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
+        "malzariey/filament-daterangepicker-filter": "^3.2",
         "shanerbaner82/panel-roles": "^0.0.3",
         "socialiteproviders/google": "^4.1",
         "spatie/laravel-backup": "^9.2",

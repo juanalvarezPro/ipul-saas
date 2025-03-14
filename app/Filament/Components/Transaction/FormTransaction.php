@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms;
 use Illuminate\Support\Str;
 use Filament\Forms\Form;
+use Malzariey\FilamentDaterangepickerFilter\Fields\DateRangePicker;
 
 class FormTransaction
 {
@@ -34,9 +35,12 @@ class FormTransaction
                         return FormTransactionConcept::createTransactionConcept($data);
                     })
                     ->required(),
-                Forms\Components\DatePicker::make('transaction_date')
+                    DateRangePicker::make('transaction_date')
                     ->label('Fecha del Movimiento')
-                    ->native(false)
+                    ->defaultToday()
+                    ->singleCalendar()
+                    ->useRangeLabels()
+                    ->timezone(env('APP_TIMEZONE', 'America/Panama'))
                     ->required(),
                 Forms\Components\TextInput::make('description')
                     ->label('Descripción (opcional)')
